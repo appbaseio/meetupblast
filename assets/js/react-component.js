@@ -48,11 +48,12 @@ var HelloWorldContainer = React.createClass({
                 $this.setState({notes:res.hits.hits});
             }
             else{
+                console.log(res);
                 var arr = $this.state.notes;
                 arr.unshift(res);
                 $this.setState({notes: arr});
             }
-            //console.log(res);
+            console.log(JSON.stringify(res));
         }).on('error', function(err) {
           console.log(err)
         })
@@ -75,5 +76,5 @@ var HelloWorldContainer = React.createClass({
         <div>
             <HelloWorldContainer />
         </div>
-        , document.body);
+        , document.getElementById('record-container'));
 

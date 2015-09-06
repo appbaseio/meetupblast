@@ -30,8 +30,8 @@ var HelloWorldContainer = React.createClass({
         var $this = this;
         var initialFlag = true;
         var streamingClient = appbase.newClient({
-        url: 'https://61ONSqYR2:8820fb93-72e7-4dbf-a2a9-4b378f0197c9@scalr.api.appbase.io',
-        appname: 'meetuprsvp',
+        url: 'https://qz4ZD8xq1:a0edfc7f-5611-46f6-8fe1-d4db234631f3@scalr.api.appbase.io',
+        appname: 'meetup2',
         });
 
         streamingClient.streamSearch({
@@ -41,6 +41,13 @@ var HelloWorldContainer = React.createClass({
             query: {
                 match_all: {}
             }
+            // query: {
+            //   term: { group:{'group_city':'Ventura'} }
+            // }
+            //,
+            // filter:{
+            //     "group":{'group_city':'Ventura'}               
+            // }
           },
         }).on('data', function(res) {
             if(initialFlag) { 

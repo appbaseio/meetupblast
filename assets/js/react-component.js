@@ -37,17 +37,18 @@ var HelloWorldContainer = React.createClass({
         streamingClient.streamSearch({
           type: 'meetup',
           body: {
-            size: 50,
-            query: {
-                match_all: {}
+            "query": {
+              "filtered": {
+                "query": {
+                  "match_all": {}
+                },
+                "filter": {
+                  "term": {
+                    "group.group_city": "nottingham"   // configure this to the city you wish
+                  }
+                }
+              }
             }
-            // query: {
-            //   term: { group:{'group_city':'Ventura'} }
-            // }
-            //,
-            // filter:{
-            //     "group":{'group_city':'Ventura'}               
-            // }
           },
         }).on('data', function(res) {
             if(initialFlag) { 

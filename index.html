@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <script src="https://fb.me/react-0.13.3.min.js"></script>
-        <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+        <!--  <script src="https://fb.me/react-0.13.3.min.js"></script>
+        <script src="https://fb.me/JSXTransformer-0.13.3.js"></script> -->
         <title>My First React File</title>
         <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 		<script src="bower_components/elasticsearch/elasticsearch.jquery.js"></script>
@@ -28,10 +28,28 @@
                 </div> -->
             </div>
             <div class="col-sm-8 col-xs-4">
-                <div id="record-container"></div>
+                <div id="record-container" class="container full_row">
+                </div>
             </div>
-        </div>             
-       <script src="assets/js/react-component.js"  type="text/jsx"></script>
+        </div>          
+        
+        <!-- For template Start -->
+        <div class="hide">
+            <div class="full_row single-record single_record_for_clone">
+                <div class="img-container">
+                    <img class="record_img" src='' alt='img' />
+                </div>
+                <div class="text-container full_row">
+                    <div class="text-head text-overflow full_row">
+                    </div>
+                    <div class="text-description text-overflow full_row">
+                    </div>
+                </div>
+            </div>
+        </div>   
+        <!-- For template End -->
+       <!-- <script src="assets/js/react-component.js"  type="text/jsx"></script> -->
+       <script type="text/javascript" src="assets/js/variable.js"></script>
        <script type="text/javascript" src="assets/js/app.js"></script>
     </body>
 </html>

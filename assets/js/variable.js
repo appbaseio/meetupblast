@@ -85,6 +85,7 @@ meetup.prototype = {
   CREATE_TAG: function(type, data) {
     $this = this;
     var list = type == 'city' ? $this.CITY_LIST : $this.TOPIC_LIST;
+    var container = $('.'+type+'_container');
     var checkbox = $('<input>').attr({
       type: 'checkbox',
       name: 'brand',
@@ -97,20 +98,22 @@ meetup.prototype = {
     var single_tag = $('<label>').append(checkbox).append(checkbox_text);
 
     checkbox.change(function() {
+      var checkbox_val = $(this).val();
       if ($(this).is(':checked')) {
-        list.push($(this).val());
-        var tag_text = $('<span>').addClass('tag_text').text($(this).val());
-        var tag_close = $('<span>').addClass('tag_close').text('X').attr('val', $(this).val());
-        var single_tag = $("<span>").addClass('single_tag').append(tag_text).append(tag_close);
+        list.push(checkbox_val);
+        var tag_text = $('<span>').addClass('tag_text').text(checkbox_val);
+        var tag_close = $('<span>').addClass('tag_close').text('X').attr('val', checkbox_val);
+        var single_tag = $("<span>").addClass('single_tag').attr('val',checkbox_val).append(tag_text).append(tag_close);
         $(tag_close).click(function() {
           var val = $(this).attr('val');
           $(single_tag).remove();
           list.remove(val);
-          $('.tag_checkbox[value="' + val + '"]').prop('checked', false);
+          container.find('.tag_checkbox[value="' + val + '"]').prop('checked', false);
         });
-        $('.tag_name').append(single_tag);
+        container.find('.tag_name').append(single_tag);
       } else {
-        list.remove($(this).val());
+         container.find('.single_tag[val="' + checkbox_val + '"]').remove();
+        list.remove();
       }
       console.log(list);
     });

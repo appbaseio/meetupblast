@@ -1,5 +1,6 @@
 function meetup() {
   this.URL = 'https://qz4ZD8xq1:a0edfc7f-5611-46f6-8fe1-d4db234631f3@scalr.api.appbase.io';
+  this.credentials = 'qz4ZD8xq1:a0edfc7f-5611-46f6-8fe1-d4db234631f3';
   this.APPNAME = 'meetup2';
   this.SEARCH_PAYLOAD = {
     type: 'meetup',
@@ -18,7 +19,32 @@ function meetup() {
       }
     }
   };
-  this.SINGLE_RECORD_ClONE = $(".single_record_for_clone").clone()
+  this.CITY_PAYLOAD = {
+    "size": "0",
+    "query": {
+      "multi_match": {
+        "query": "new",
+        "fields": [
+          "group_city_simple",
+          "group_city_ngrams"
+        ],
+        "operator": "and"
+      }
+    },
+    "aggs": {
+      "city": {
+        "terms": {
+          "field": "group_city_simple",
+          "order": {
+            "_count": "desc"
+          },
+          "size": 0
+        }
+      }
+    }
+  };
+  this.SINGLE_RECORD_ClONE = $(".single_record_for_clone").clone();
+  this.CITY_LIST = [];
 }
 
 meetup.prototype = {
@@ -30,5 +56,39 @@ meetup.prototype = {
     single_record.find('.text-head').text(obj.member.member_name);
     single_record.find('.text-description').text(obj.event.event_name);
     return single_record;
-  }
+  },
+  CREATE_TAG:function(data) {
+    $this = this;
+    var checkbox = $('<input>').attr({
+        type: 'checkbox',
+        name: 'brand',
+        class:'tag_checkbox',
+        value: data
+    });
+    if ($.inArray(data, $this.CITY_LIST) != -1)
+        checkbox.prop('checked', true);
+    var checkbox_text = $('<span>').text(data);
+    var single_tag = $('<label>').append(checkbox).append(checkbox_text);
+
+    checkbox.change(function() {
+        if ($(this).is(':checked')){
+            $this.CITY_LIST.push($(this).val());
+            var tag_text = $('<span>').addClass('tag_text').text($(this).val());
+            var tag_close = $('<span>').addClass('tag_close').text('X').attr('val',$(this).val());
+            var single_tag = $("<span>").addClass('single_tag').append(tag_text).append(tag_close);
+            $(tag_close).click(function(){
+                var val = $(this).attr('val');
+                $(single_tag).remove();
+                $this.CITY_LIST.remove(val);
+                $('.tag_checkbox[value="'+val+'"]').prop('checked',false);
+            });
+            $('.tag_name').append(single_tag);
+        }
+        else {
+            $this.CITY_LIST.remove($(this).val());
+        }
+        console.log($this.CITY_LIST);
+    });
+    return single_tag;
+}
 }

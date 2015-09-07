@@ -35,6 +35,7 @@ $(document).ready(function(){
 		      contentType: "application/json",
 		      data: request_data,
 		      success: function(full_data) {
+		      	app_process.topic_list();
 		      	city_list = [];
 		      	var cities = full_data.aggregations.city.buckets;
 		    	$.each(cities, function (i, city) {
@@ -47,7 +48,7 @@ $(document).ready(function(){
 
 		//Set City
 		set_city:function(cities){
-			$('.topic_search').typeahead({
+			$('.city_search').typeahead({
 			    hint: true,
 			    highlight: true,
 			    minLength: 0
@@ -59,7 +60,56 @@ $(document).ready(function(){
 			        pending: true,
 			        suggestion: function(data) {
 			            if (data) {
-			                var single_record = meetup_val.CREATE_TAG(data);
+			                var single_record = meetup_val.CREATE_TAG('city',data);
+			                return single_record;
+			            } else
+			                return;
+			        }
+			    }
+			});
+		},
+
+		//Get Topics
+		topic_list:function(){
+			var request_data = JSON.stringify(meetup_val.TOPIC_PAYLOAD);
+			jQuery.ajax({
+		      type: "POST",
+		      beforeSend: function(request) {
+		        request.setRequestHeader("Authorization", "Basic " + btoa(meetup_val.credentials));
+		      },
+		      'url':'http://scalr.api.appbase.io/meetup2/meetup/_search',
+		      dataType: 'json',
+		      contentType: "application/json",
+		      data: request_data,
+		      success: function(full_data) {
+		      	topic_list = [];
+		      	var cities = full_data.aggregations.topic_name.buckets;
+		    	$.each(cities, function (i, city) {
+			        topic_list.push(city.key);
+			    });
+		        app_process.set_topic(topic_list);
+				$('.topic_search').typeahead('val', '').focus();
+				$('.city_search').typeahead('val', '').focus();
+		      }
+		    });
+		},
+
+		//Set Topics
+		set_topic:function(topics){
+			console.log(topics);
+			$('.topic_search').typeahead({
+			    hint: true,
+			    highlight: true,
+			    minLength: 0
+			}, {
+			    name: 'topics',
+			    limit: 100,
+			    source: substringMatcher(topics),
+			    templates: {
+			        pending: true,
+			        suggestion: function(data) {
+			            if (data) {
+			                var single_record = meetup_val.CREATE_TAG('topic',data);
 			                return single_record;
 			            } else
 			                return;
@@ -70,6 +120,6 @@ $(document).ready(function(){
 	}
 	
 	app_process.stream_meetup();
-	app_process.city_list();
+	app_process.city_list();	
 });
 

@@ -43,8 +43,33 @@ function meetup() {
       }
     }
   };
+  this.TOPIC_PAYLOAD = {
+    "size": "0",
+    "query": {
+      "multi_match": {
+        "query": "so",
+        "fields": [
+          "topic_name_simple",
+          "topic_name_ngrams"
+        ],
+        "operator": "and"
+      }
+    },
+    "aggs": {
+      "topic_name": {
+        "terms": {
+          "field": "topic_name_simple",
+          "order": {
+            "_count": "desc"
+          },
+          "size": 0
+        }
+      }
+    }
+  };
   this.SINGLE_RECORD_ClONE = $(".single_record_for_clone").clone();
   this.CITY_LIST = [];
+  this.TOPIC_LIST = [];
 }
 
 meetup.prototype = {
@@ -57,38 +82,38 @@ meetup.prototype = {
     single_record.find('.text-description').text(obj.event.event_name);
     return single_record;
   },
-  CREATE_TAG:function(data) {
+  CREATE_TAG: function(type, data) {
     $this = this;
+    var list = type == 'city' ? $this.CITY_LIST : $this.TOPIC_LIST;
     var checkbox = $('<input>').attr({
-        type: 'checkbox',
-        name: 'brand',
-        class:'tag_checkbox',
-        value: data
+      type: 'checkbox',
+      name: 'brand',
+      class: 'tag_checkbox',
+      value: data
     });
-    if ($.inArray(data, $this.CITY_LIST) != -1)
-        checkbox.prop('checked', true);
+    if ($.inArray(data, list) != -1)
+      checkbox.prop('checked', true);
     var checkbox_text = $('<span>').text(data);
     var single_tag = $('<label>').append(checkbox).append(checkbox_text);
 
     checkbox.change(function() {
-        if ($(this).is(':checked')){
-            $this.CITY_LIST.push($(this).val());
-            var tag_text = $('<span>').addClass('tag_text').text($(this).val());
-            var tag_close = $('<span>').addClass('tag_close').text('X').attr('val',$(this).val());
-            var single_tag = $("<span>").addClass('single_tag').append(tag_text).append(tag_close);
-            $(tag_close).click(function(){
-                var val = $(this).attr('val');
-                $(single_tag).remove();
-                $this.CITY_LIST.remove(val);
-                $('.tag_checkbox[value="'+val+'"]').prop('checked',false);
-            });
-            $('.tag_name').append(single_tag);
-        }
-        else {
-            $this.CITY_LIST.remove($(this).val());
-        }
-        console.log($this.CITY_LIST);
+      if ($(this).is(':checked')) {
+        list.push($(this).val());
+        var tag_text = $('<span>').addClass('tag_text').text($(this).val());
+        var tag_close = $('<span>').addClass('tag_close').text('X').attr('val', $(this).val());
+        var single_tag = $("<span>").addClass('single_tag').append(tag_text).append(tag_close);
+        $(tag_close).click(function() {
+          var val = $(this).attr('val');
+          $(single_tag).remove();
+          list.remove(val);
+          $('.tag_checkbox[value="' + val + '"]').prop('checked', false);
+        });
+        $('.tag_name').append(single_tag);
+      } else {
+        list.remove($(this).val());
+      }
+      console.log(list);
     });
     return single_tag;
-}
+  }
 }

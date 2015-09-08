@@ -2,23 +2,6 @@ function meetup() {
   this.URL = 'https://qz4ZD8xq1:a0edfc7f-5611-46f6-8fe1-d4db234631f3@scalr.api.appbase.io';
   this.credentials = 'qz4ZD8xq1:a0edfc7f-5611-46f6-8fe1-d4db234631f3';
   this.APPNAME = 'meetup2';
-  this.SEARCH_PAYLOAD = {
-    type: 'meetup',
-    body: {
-      "query": {
-        "filtered": {
-          "query": {
-            "match_all": {}
-          },
-          "filter": {
-            "term": {
-              "group.group_city": "ahmedabad"
-            }
-          }
-        }
-      }
-    }
-  };
   this.CITY_PAYLOAD = {
     "size": "0",
     "query": {
@@ -74,8 +57,36 @@ function meetup() {
 
 meetup.prototype = {
   constructor: meetup,
+  SEARCH_PAYLOAD:function(){
+    var obj = {
+    type: 'meetup',
+    body: {
+      "query": {
+        "filtered": {
+          "query": {
+            "match_all": {}
+          },
+          "filter": [
+          // {
+          //   "terms": {
+          //     "group.group_city": ["newport"]
+          //   }
+          // }
+          //,
+          // {
+          //   "terms": {
+          //      "group.group_topics.topic_name": "0"
+          //   }
+          // }
+          ]
+        }
+      }
+    }
+  };
+  return obj;
+  },
   SINGLE_RECORD: function(obj) {
-    var single_record = this.SINGLE_RECORD_ClONE;
+    var single_record = this.SINGLE_RECORD_ClONE.clone();
     single_record.removeClass('single_record_for_clone');
     single_record.find('.record_img').attr("src", obj.member.photo);
     single_record.find('.text-head').text(obj.member.member_name);
@@ -85,11 +96,12 @@ meetup.prototype = {
   CREATE_TAG: function(type, data) {
     $this = this;
     var list = type == 'city' ? $this.CITY_LIST : $this.TOPIC_LIST;
-    var container = $('.'+type+'_container');
+    var container = $('.' + type + '_container');
     var checkbox = $('<input>').attr({
       type: 'checkbox',
       name: 'brand',
       class: 'tag_checkbox',
+      container: type,
       value: data
     });
     if ($.inArray(data, list) != -1)
@@ -99,11 +111,13 @@ meetup.prototype = {
 
     checkbox.change(function() {
       var checkbox_val = $(this).val();
+      var type = $(this).attr('container');
       if ($(this).is(':checked')) {
-        list.push(checkbox_val);
+        var check2 = checkbox_val.toLowerCase();
+        list.push(check2);
         var tag_text = $('<span>').addClass('tag_text').text(checkbox_val);
         var tag_close = $('<span>').addClass('tag_close').text('X').attr('val', checkbox_val);
-        var single_tag = $("<span>").addClass('single_tag').attr('val',checkbox_val).append(tag_text).append(tag_close);
+        var single_tag = $("<span>").addClass('single_tag').attr('val', checkbox_val).append(tag_text).append(tag_close);
         $(tag_close).click(function() {
           var val = $(this).attr('val');
           $(single_tag).remove();
@@ -111,12 +125,52 @@ meetup.prototype = {
           container.find('.tag_checkbox[value="' + val + '"]').prop('checked', false);
         });
         container.find('.tag_name').append(single_tag);
+        $this.FIRE_FILTER();
       } else {
-         container.find('.single_tag[val="' + checkbox_val + '"]').remove();
+        container.find('.single_tag[val="' + checkbox_val + '"]').remove();
         list.remove();
+        $this.FIRE_FILTER();
       }
-      console.log(list);
+      //console.log(list);
     });
     return single_tag;
+  },
+  FIRE_FILTER: function() {
+    var $this = this
+    var search_payload = this.SEARCH_PAYLOAD();    
+    
+    if($this.CITY_LIST.length){
+      search_payload['body']['query']['filtered']['filter'][0] = {'terms': {"group.group_city" :$this.CITY_LIST}};
+    }
+    else{
+
+    }
+
+    if($this.TOPIC_LIST.length){      
+      search_payload['body']['query']['filtered']['filter'][1] = {'terms' : { "group.group_topics.topic_name": $this.TOPIC_LIST}};
+    }
+    else{
+
+    }
+    
+    $('#record-container').html('');
+    var streamingClient = appbase.newClient({
+      url: $this.URL,
+      appname: $this.APPNAME
+    }); 
+
+    streamingClient.streamSearch(search_payload).on('data', function(res) {
+      console.log(res);
+      var record_array = res.hits.hits;
+      var record_length = record_array.length;
+      for (var i = 0; i < record_length; i++) {
+        var single_record = record_array[i];
+        var single_record_html = $this.SINGLE_RECORD(single_record._source);
+        $('#record-container').append(single_record_html);
+      }
+    }).on('error', function(err) {
+      console.log(err)
+    });
   }
+
 }

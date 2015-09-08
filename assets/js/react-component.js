@@ -16,7 +16,7 @@ var HelloWorld = React.createClass({
                 </div>
 
 			)
-	}	
+	}
 });
 
 var uniqueId = 1;
@@ -36,7 +36,9 @@ var HelloWorldContainer = React.createClass({
         appname: 'meetup2',
         });
 
-        streamingClient.streamSearch({
+        // apply currentstream.stop() before starting a new request,
+        // this stops the current feed from returning new results.
+        var currentStream = streamingClient.streamSearch({
           type: 'meetup',
           body: {
             "query": {
@@ -56,8 +58,8 @@ var HelloWorldContainer = React.createClass({
             //setTimeout(function(){
                //$this.replaceState($this.getInitialState());
             //},3000);
-            if(initialFlag) { 
-                initialFlag = false;                
+            if(initialFlag) {
+                initialFlag = false;
                 $this.setState({notes:res.hits.hits});
             }
             else{
@@ -84,7 +86,7 @@ var HelloWorldContainer = React.createClass({
         );
     }
 });
- React.render(   
+ React.render(
         <div>
             <HelloWorldContainer />
         </div>

@@ -154,7 +154,7 @@ meetup.prototype = {
     }
     
     $('#record-container').html('');
-    var streamingClient = appbase.newClient({
+    var streamingClient = new appbase({
       url: $this.URL,
       appname: $this.APPNAME
     }); 

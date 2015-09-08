@@ -57,33 +57,35 @@ function meetup() {
 
 meetup.prototype = {
   constructor: meetup,
-  SEARCH_PAYLOAD:function(){
+  SEARCH_PAYLOAD: function() {
     var obj = {
-    type: 'meetup',
-    body: {
-      "query": {
-        "filtered": {
-          "query": {
-            "match_all": {}
-          },
-          "filter": [
-          {
-            "terms": {
-            //  "group.group_city": ["newport"]
+      type: 'meetup',
+      body: {
+        "query": {
+          "filtered": {
+            "query": {
+              "match_all": {}
+            },
+            "filter": {
+              // "and": [
+              //   // {
+              //   //   "terms": {
+              //   //   //  "group.group_city": ["newport"]
+              //   //   }
+              //   // }
+              //   // ,
+              //   // {
+              //   //   "terms": {
+              //   //   //   "group.group_topics.topic_name": "0"
+              //   //   }
+              //   // }
+              // ]
             }
           }
-          ,
-          {
-            "terms": {
-            //   "group.group_topics.topic_name": "0"
-            }
-          }
-          ]
         }
       }
-    }
-  };
-  return obj;
+    };
+    return obj;
   },
   SINGLE_RECORD: function(obj) {
     var single_record = this.SINGLE_RECORD_ClONE.clone();
@@ -112,8 +114,8 @@ meetup.prototype = {
     checkbox.change(function() {
       var checkbox_val = $(this).val();
       var type = $(this).attr('container');
-      var check2 = checkbox_val.toLowerCase();
-        
+      var check2 = checkbox_val;
+
       if ($(this).is(':checked')) {
         list.push(check2);
         var tag_text = $('<span>').addClass('tag_text').text(checkbox_val);
@@ -122,7 +124,7 @@ meetup.prototype = {
         $(tag_close).click(function() {
           var val = $(this).attr('val');
           $(single_tag).remove();
-          list.remove(val.toLowerCase());
+          list.remove(val);
           $this.FIRE_FILTER();
           container.find('.tag_checkbox[value="' + val + '"]').prop('checked', false);
         });
@@ -139,31 +141,43 @@ meetup.prototype = {
   },
   FIRE_FILTER: function() {
     var $this = this
-    var search_payload = this.SEARCH_PAYLOAD();    
-    
-    search_payload['body']['query']['filtered']['filter'] = []; 
-    
-    if($this.CITY_LIST.length){
-      search_payload['body']['query']['filtered']['filter'][0] = {'terms': {"group.group_city" :$this.CITY_LIST}};
+    var search_payload = this.SEARCH_PAYLOAD();
+
+    search_payload['body']['query']['filtered']['filter'] = {};
+    if($this.CITY_LIST.length || $this.TOPIC_LIST.length){      
+      search_payload['body']['query']['filtered']['filter'] = {'and':[]};
     }
 
-    if($this.TOPIC_LIST.length){     
-      if($this.CITY_LIST.length) 
+    if ($this.CITY_LIST.length) {
+      search_payload['body']['query']['filtered']['filter']['and'][0] = {
+        'terms': {
+          "group_city_simple": $this.CITY_LIST
+        }
+      };
+    }
+
+    if ($this.TOPIC_LIST.length) {
+      if ($this.CITY_LIST.length)
         var ar_index = 1
       else
         var ar_index = 0;
-      search_payload['body']['query']['filtered']['filter'][ar_index] = {'terms' : { "group.group_topics.topic_name": $this.TOPIC_LIST}};
+      search_payload['body']['query']['filtered']['filter']['and'][ar_index] = {
+        'terms': {
+          "topic_name_simple": $this.TOPIC_LIST
+        }
+      };
     }
 
+    console.log(JSON.stringify(search_payload));
     $('#record-container').html('');
 
-    if(typeof streamingClient != 'undefined')
+    if (typeof streamingClient != 'undefined')
       streamingClient.streamSearch.stop();
-    
+
     var streamingClient = new appbase({
       url: $this.URL,
       appname: $this.APPNAME
-    }); 
+    });
     streamingClient.streamSearch(search_payload).on('data', function(res) {
       console.log(res);
       var record_array = res.hits.hits;

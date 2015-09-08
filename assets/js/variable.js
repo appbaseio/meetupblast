@@ -49,26 +49,27 @@ meetup.prototype = {
       type: 'meetup',
       body: {
         "query": {
-          "filtered": {
-            "query": {
-              "match_all": {}
-            },
-            "filter": {
-              // "and": [
-              //   // {
-              //   //   "terms": {
-              //   //   //  "group.group_city": ["newport"]
-              //   //   }
-              //   // }
-              //   // ,
-              //   // {
-              //   //   "terms": {
-              //   //   //   "group.group_topics.topic_name": "0"
-              //   //   }
-              //   // }
-              // ]
-            }
-          }
+          "match_all": {}
+          // "filtered": {
+          //   "query": {
+          //     "match_all": {}
+          //   },
+          //   "filter": {
+          //     // "and": [
+          //     //   // {
+          //     //   //   "terms": {
+          //     //   //   //  "group.group_city": ["newport"]
+          //     //   //   }
+          //     //   // }
+          //     //   // ,
+          //     //   // {
+          //     //   //   "terms": {
+          //     //   //   //   "group.group_topics.topic_name": "0"
+          //     //   //   }
+          //     //   // }
+          //     // ]
+          //   }
+          // }
         }
       }
     };
@@ -130,30 +131,30 @@ meetup.prototype = {
     var $this = this
     var search_payload = this.SEARCH_PAYLOAD();
 
-    search_payload['body']['query']['filtered']['filter'] = {};
-    if($this.CITY_LIST.length || $this.TOPIC_LIST.length){      
-      search_payload['body']['query']['filtered']['filter'] = {'and':[]};
-    }
+    // search_payload['body']['query']['filtered']['filter'] = {};
+    // if($this.CITY_LIST.length || $this.TOPIC_LIST.length){      
+    //   search_payload['body']['query']['filtered']['filter'] = {'and':[]};
+    // }
 
-    if ($this.CITY_LIST.length) {
-      search_payload['body']['query']['filtered']['filter']['and'][0] = {
-        'terms': {
-          "group_city_simple": $this.CITY_LIST
-        }
-      };
-    }
+    // if ($this.CITY_LIST.length) {
+    //   search_payload['body']['query']['filtered']['filter']['and'][0] = {
+    //     'terms': {
+    //       "group_city_simple": $this.CITY_LIST
+    //     }
+    //   };
+    // }
 
-    if ($this.TOPIC_LIST.length) {
-      if ($this.CITY_LIST.length)
-        var ar_index = 1
-      else
-        var ar_index = 0;
-      search_payload['body']['query']['filtered']['filter']['and'][ar_index] = {
-        'terms': {
-          "topic_name_simple": $this.TOPIC_LIST
-        }
-      };
-    }
+    // if ($this.TOPIC_LIST.length) {
+    //   if ($this.CITY_LIST.length)
+    //     var ar_index = 1
+    //   else
+    //     var ar_index = 0;
+    //   search_payload['body']['query']['filtered']['filter']['and'][ar_index] = {
+    //     'terms': {
+    //       "topic_name_simple": $this.TOPIC_LIST
+    //     }
+    //   };
+    // }
 
     console.log(JSON.stringify(search_payload));
     $('#record-container').html('');

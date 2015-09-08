@@ -90,12 +90,14 @@ meetup.prototype = {
     return obj;
   },
   GET_STREAMING_CLIENT:function(){
-      streamingClient = new appbase({
-        url: this.URL,
-        appname: this.APPNAME,
-        username: this.USERNAME,
-        password: this.PASSWORD
-      });
+      if(typeof streamingClient == 'undefined'){
+        streamingClient = new appbase({
+          url: this.URL,
+          appname: this.APPNAME,
+          username: this.USERNAME,
+          password: this.PASSWORD
+        });
+      }
       return streamingClient;
   },
   SINGLE_RECORD: function(obj) {
@@ -150,46 +152,38 @@ meetup.prototype = {
     });
     return single_tag;
   },
-  FIRE_FILTER: function(streamingClient) {
+  FIRE_FILTER: function() {
     var $this = this
-    
+    var streaming = this.GET_STREAMING_CLIENT();
     // search_payload['body']['query']['filtered']['filter'] = {};
     if($this.CITY_LIST.length || $this.TOPIC_LIST.length){
       var search_payload = this.SEARCH_PAYLOAD('filter');
-      search_payload['body']['query']['filtered']['filter'] = {'and':[]};
+      
+      if ($this.CITY_LIST.length) {
+        search_payload['body']['query']['filtered']['filter']['and'][0] = {
+          'terms': {
+            "group_city_simple": $this.CITY_LIST
+          }
+        };
+      }
+
+      if ($this.TOPIC_LIST.length) {
+        if ($this.CITY_LIST.length)
+          var ar_index = 1
+        else
+          var ar_index = 0;
+        search_payload['body']['query']['filtered']['filter']['and'][ar_index] = {
+          'terms': {
+            "topic_name_simple": $this.TOPIC_LIST
+          }
+        };
+      }
+      responseStream.stop();
     }
     else{
       var search_payload = this.SEARCH_PAYLOAD('pure');  
     }
-    // if ($this.CITY_LIST.length) {
-    //   search_payload['body']['query']['filtered']['filter']['and'][0] = {
-    //     'terms': {
-    //       "group_city_simple": $this.CITY_LIST
-    //     }
-    //   };
-    // }
-
-    // if ($this.TOPIC_LIST.length) {
-    //   if ($this.CITY_LIST.length)
-    //     var ar_index = 1
-    //   else
-    //     var ar_index = 0;
-    //   search_payload['body']['query']['filtered']['filter']['and'][ar_index] = {
-    //     'terms': {
-    //       "topic_name_simple": $this.TOPIC_LIST
-    //     }
-    //   };
-    // }
-
-    console.log(JSON.stringify(search_payload));
-    $('#record-container').html('');
-
-    //  if (typeof streamingClient != 'undefined')
-    //    streamingClient.stop();
-    console.log("reinstantiating...");
-    console.log(search_payload);
-   
-    streamingClient.streamSearch(search_payload).on('data', function(res) {
+    responseStream = streaming.streamSearch(search_payload).on('data', function(res) {
         console.log(res);
         if(res.hasOwnProperty('hits')){
           var record_array = res.hits.hits;
@@ -209,6 +203,17 @@ meetup.prototype = {
     }).on('error', function(err) {
       console.log(err)
     });
+
+    console.log(JSON.stringify(search_payload));
+    $('#record-container').html('');
+
+      // if (typeof streaming.streamSearch != 'undefined')
+      //   streaming.streamSearch.stop();
+
+    console.log("reinstantiating...");
+    console.log(search_payload);
+   
+    
   }
 
 }

@@ -4,40 +4,40 @@ function meetup() {
   this.PASSWORD = 'a0edfc7f-5611-46f6-8fe1-d4db234631f3';
   this.APPNAME = 'meetup2';
   this.CITY_PAYLOAD = {
-   "size": "0",
-   "query": {
-     "match_all": {}
-   },
-   "aggs": {
-     "city": {
-       "terms": {
-         "field": "group_city_simple",
-         "order": {
-           "_count": "desc"
-         },
-         "size": 1000
-       }
-     }
-   }
- };
+    "size": "0",
+    "query": {
+      "match_all": {}
+    },
+    "aggs": {
+      "city": {
+        "terms": {
+          "field": "group_city_simple",
+          "order": {
+            "_count": "desc"
+          },
+          "size": 1000
+        }
+      }
+    }
+  };
 
   this.TOPIC_PAYLOAD = {
-   "size": "0",
-   "query": {
-     "match_all": {}
-   },
-   "aggs": {
-     "city": {
-       "terms": {
-         "field": "topic_name_simple",
-         "order": {
-           "_count": "desc"
-         },
-         "size": 1000
-       }
-     }
-   }
- };
+    "size": "0",
+    "query": {
+      "match_all": {}
+    },
+    "aggs": {
+      "city": {
+        "terms": {
+          "field": "topic_name_simple",
+          "order": {
+            "_count": "desc"
+          },
+          "size": 1000
+        }
+      }
+    }
+  };
   this.SINGLE_RECORD_ClONE = $(".single_record_for_clone").clone();
   this.CITY_LIST = [];
   this.TOPIC_LIST = [];
@@ -45,37 +45,58 @@ function meetup() {
 
 meetup.prototype = {
   constructor: meetup,
-  SEARCH_PAYLOAD: function() {
-    var obj = {
-      type: 'meetup',
-      stream: true,
-      body: {
-        "query": {
-          "match_all": {}
+  SEARCH_PAYLOAD: function(method) {
+    if (method == 'pure') {
+      var obj = {
+        type: 'meetup',
+        stream: true,
+        body: {
+          "query": {
+            "match_all": {}
+          }
         }
-      }
-    };
-          // "filtered": {
-          //   "query": {
-          //     "match_all": {}
-          //   },
-          //   "filter": {
-          //     // "and": [
-          //     //   // {
-          //     //   //   "terms": {
-          //     //   //   //  "group.group_city": ["newport"]
-          //     //   //   }
-          //     //   // }
-          //     //   // ,
-          //     //   // {
-          //     //   //   "terms": {
-          //     //   //   //   "group.group_topics.topic_name": "0"
-          //     //   //   }
-          //     //   // }
-          //     // ]
-          //   }
-          // }
+      };
+    } else {
+      var obj = {
+        type: 'meetup',
+        stream: true,
+        body: {
+          "query": {
+            "filtered": {
+              "query": {
+                "match_all": {}
+              },
+              "filter": {
+                "and": []
+                  //   // {
+                  //   //   "terms": {
+                  //   //   //  "group.group_city": ["newport"]
+                  //   //   }
+                  //   // }
+                  //   // ,
+                  //   // {
+                  //   //   "terms": {
+                  //   //   //   "group.group_topics.topic_name": "0"
+                  //   //   }
+                  //   // }
+                  // ]
+              }
+            }
+          }
+        }
+      };
+    }
+   
     return obj;
+  },
+  GET_STREAMING_CLIENT:function(){
+      streamingClient = new appbase({
+        url: this.URL,
+        appname: this.APPNAME,
+        username: this.USERNAME,
+        password: this.PASSWORD
+      });
+      return streamingClient;
   },
   SINGLE_RECORD: function(obj) {
     var single_record = this.SINGLE_RECORD_ClONE.clone();
@@ -129,15 +150,17 @@ meetup.prototype = {
     });
     return single_tag;
   },
-  FIRE_FILTER: function() {
+  FIRE_FILTER: function(streamingClient) {
     var $this = this
-    var search_payload = this.SEARCH_PAYLOAD();
-
+    
     // search_payload['body']['query']['filtered']['filter'] = {};
-    // if($this.CITY_LIST.length || $this.TOPIC_LIST.length){
-    //   search_payload['body']['query']['filtered']['filter'] = {'and':[]};
-    // }
-
+    if($this.CITY_LIST.length || $this.TOPIC_LIST.length){
+      var search_payload = this.SEARCH_PAYLOAD('filter');
+      search_payload['body']['query']['filtered']['filter'] = {'and':[]};
+    }
+    else{
+      var search_payload = this.SEARCH_PAYLOAD('pure');  
+    }
     // if ($this.CITY_LIST.length) {
     //   search_payload['body']['query']['filtered']['filter']['and'][0] = {
     //     'terms': {
@@ -161,32 +184,28 @@ meetup.prototype = {
     console.log(JSON.stringify(search_payload));
     $('#record-container').html('');
 
-  //  if (typeof streamingClient != 'undefined')
-  //    streamingClient.stop();
+    //  if (typeof streamingClient != 'undefined')
+    //    streamingClient.stop();
     console.log("reinstantiating...");
     console.log(search_payload);
-    var streamingClient = new appbase({
-      url: $this.URL,
-      appname: $this.APPNAME,
-      username: $this.USERNAME,
-      password: $this.PASSWORD
-    });
-    streamingClient.streamSearch({
-      "type": "meetup",
-      "stream": true,
-      "body": {
-        "query": {"match_all": {}}
-      }
-    }).on('data', function(res) {
-      console.log("streaming results");
-      console.log(res);
-    /*  var record_array = res.hits.hits;
-      var record_length = record_array.length;
-      for (var i = 0; i < record_length; i++) {
-        var single_record = record_array[i];
-        var single_record_html = $this.SINGLE_RECORD(single_record._source);
-        $('#record-container').append(single_record_html);
-      }*/
+   
+    streamingClient.streamSearch(search_payload).on('data', function(res) {
+        console.log(res);
+        if(res.hasOwnProperty('hits')){
+          var record_array = res.hits.hits;
+          var record_length = record_array.length;
+          for (var i = 0; i < record_length; i++) {
+            var single_record = record_array[i];
+            var single_record_html = $this.SINGLE_RECORD(single_record._source);
+            $('#record-container').prepend(single_record_html);
+          }
+        }
+        else{
+              var single_record = res;
+              var single_record_html = $this.SINGLE_RECORD(single_record._source);
+              $('#record-container').prepend(single_record_html);
+        }
+        
     }).on('error', function(err) {
       console.log(err)
     });

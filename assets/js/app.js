@@ -1,11 +1,11 @@
 $(document).ready(function(){
 	var meetup_val = new meetup();
-
 	var app_process = {
 
 		//Stream Meetup
 		stream_meetup:function(){
-			meetup_val.FIRE_FILTER();
+			streamingClient = meetup_val.GET_STREAMING_CLIENT();
+			meetup_val.FIRE_FILTER(streamingClient);
 		},
 
 		//Get City
@@ -27,7 +27,6 @@ $(document).ready(function(){
 		    	$.each(cities, function (i, city) {
 			        city_list.push(city.key);
 			    });
-			    console.log(cities);
 		        app_process.set_city(city_list);
 		      }
 		    });

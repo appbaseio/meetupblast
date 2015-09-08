@@ -27,6 +27,7 @@ $(document).ready(function(){
 		    	$.each(cities, function (i, city) {
 			        city_list.push(city.key);
 			    });
+			    console.log(cities);
 		        app_process.set_city(city_list);
 		      }
 		    });
@@ -40,7 +41,7 @@ $(document).ready(function(){
 			    minLength: 0
 			}, {
 			    name: 'cities',
-			    limit: 100,
+			    limit: 1000,
 			    source: substringMatcher(cities),
 			    templates: {
 			        pending: true,
@@ -69,7 +70,7 @@ $(document).ready(function(){
 		      data: request_data,
 		      success: function(full_data) {
 		      	topic_list = [];
-		      	var cities = full_data.aggregations.topic_name.buckets;
+		      	var cities = full_data.aggregations.city.buckets;
 		    	$.each(cities, function (i, city) {
 			        topic_list.push(city.key);
 			    });
@@ -88,7 +89,7 @@ $(document).ready(function(){
 			    minLength: 0
 			}, {
 			    name: 'topics',
-			    limit: 100,
+			    limit: 1000,
 			    source: substringMatcher(topics),
 			    templates: {
 			        pending: true,

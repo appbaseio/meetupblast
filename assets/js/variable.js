@@ -3,53 +3,40 @@ function meetup() {
   this.credentials = 'qz4ZD8xq1:a0edfc7f-5611-46f6-8fe1-d4db234631f3';
   this.APPNAME = 'meetup2';
   this.CITY_PAYLOAD = {
-    "size": "0",
-    "query": {
-      "multi_match": {
-        "query": "new",
-        "fields": [
-          "group_city_simple",
-          "group_city_ngrams"
-        ],
-        "operator": "and"
-      }
-    },
-    "aggs": {
-      "city": {
-        "terms": {
-          "field": "group_city_simple",
-          "order": {
-            "_count": "desc"
-          },
-          "size": 0
-        }
-      }
-    }
-  };
+   "size": "0",
+   "query": {
+     "match_all": {}
+   },
+   "aggs": {
+     "city": {
+       "terms": {
+         "field": "group_city_simple",
+         "order": {
+           "_count": "desc"
+         },
+         "size": 1000
+       }
+     }
+   }
+ };
+
   this.TOPIC_PAYLOAD = {
-    "size": "0",
-    "query": {
-      "multi_match": {
-        "query": "so",
-        "fields": [
-          "topic_name_simple",
-          "topic_name_ngrams"
-        ],
-        "operator": "and"
-      }
-    },
-    "aggs": {
-      "topic_name": {
-        "terms": {
-          "field": "topic_name_simple",
-          "order": {
-            "_count": "desc"
-          },
-          "size": 0
-        }
-      }
-    }
-  };
+   "size": "0",
+   "query": {
+     "match_all": {}
+   },
+   "aggs": {
+     "city": {
+       "terms": {
+         "field": "topic_name_simple",
+         "order": {
+           "_count": "desc"
+         },
+         "size": 1000
+       }
+     }
+   }
+ };
   this.SINGLE_RECORD_ClONE = $(".single_record_for_clone").clone();
   this.CITY_LIST = [];
   this.TOPIC_LIST = [];

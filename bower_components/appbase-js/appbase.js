@@ -1,59 +1,57 @@
-var hyperquest = require('hyperquest')
-var JSONStream = require('JSONStream')
-var querystring = require('querystring')
+var URL = require('url')
 
-var newStreamDocumentService = require('./get.js')
-var newStreamSearchService = require('./search.js')
+var betterWs = require('./better_websocket.js')
+var indexService = require('./actions/index.js')
+var streamingRequest = require('./streaming_request.js')
+var wsRequest = require('./websocket_request.js')
+var streamDocumentService = require('./actions/stream_document.js')
+var streamSearchService = require('./actions/stream_search.js')
 
-var appbase = {}
-
-appbase.newClient = function newClient(args) {
-	var url = args.url
-	var username = args.username
-	var password = args.password
-	var appname = args.appname
-
-	var client = {}
-
-	if(url.slice(-1) === "/") {
-		url = url.slice(0, -1)
+var appbaseClient = function appbaseClient(args) {
+	if ( !(this instanceof appbaseClient) ) {
+		return new appbaseClient()
 	}
 
-	client.performStreamingRequest = function performStreamingRequest(args) {
-		var method = args.method
-		var path = args.path
-		var params = args.params
-		var body = args.body
-		if(!body || typeof body !== 'object') {
-			body = {}
-		}
+	this.parsedUrl = URL.parse(args.url)
 
-		var requestStream = hyperquest({
-			method: method,
-			uri: url + '/' + appname + '/' + path + '?' + querystring.stringify(params),
-			auth: username + ':' + password
-		})
+	this.url = args.url
+	this.username = args.username
+	this.password = args.password
+	this.appname = args.appname
 
-		if(requestStream.writable) {
-			requestStream.end(JSON.stringify(body))
-		}
-
-		return requestStream.pipe(JSONStream.parse())
+	if(this.parsedUrl.protocol === 'https:') {
+		this.ws = new betterWs('wss://' + this.parsedUrl.host)
+	} else {
+		this.ws = new betterWs('ws://' + this.parsedUrl.host)
 	}
 
-	client.streamDocument = function streamDocument(args) {
-		return newStreamDocumentService(client, args)
+	if(this.url.slice(-1) === "/") {
+		this.url = this.url.slice(0, -1)
 	}
+}
 
-	client.streamSearch = function streamSearch(args) {
-		return newStreamSearchService(client, args)
-	}
+appbaseClient.prototype.performWsRequest = function performWsRequest(args) {
+	return new wsRequest(this, args)
+}
 
-	return client
+appbaseClient.prototype.performStreamingRequest = function performStreamingRequest(args) {
+	return new streamingRequest(this, args)
+}
+
+appbaseClient.prototype.index = function index(args) {
+	return new indexService(this, args)
+}
+
+appbaseClient.prototype.streamDocument = function streamDocument(args) {
+	return new streamDocumentService(this, args)
+}
+
+appbaseClient.prototype.streamSearch = function streamSearch(args) {
+	return new streamSearchService(this, args)
 }
 
 if(typeof window !== 'undefined') {
-	window.appbase = appbase
+	window.appbase = appbaseClient
 }
 
-module.exports = appbase
+module.exports = appbaseClient

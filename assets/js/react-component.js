@@ -31,7 +31,7 @@ var HelloWorldContainer = React.createClass({
    componentWillMount :function(){
         var $this = this;
         var initialFlag = true;
-        var streamingClient = appbase.newClient({
+        var streamingClient = new appbase({
         url: 'https://qz4ZD8xq1:a0edfc7f-5611-46f6-8fe1-d4db234631f3@scalr.api.appbase.io',
         appname: 'meetup2',
         });

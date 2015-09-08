@@ -30,5 +30,6 @@
   },
   "_source": "git://github.com/appbaseio/appbase-js.git",
   "_target": "~0.1.0",
-  "_originalSource": "appbase-js"
+  "_originalSource": "appbase-js",
+  "_direct": true
 }

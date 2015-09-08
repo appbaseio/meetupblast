@@ -1,6 +1,7 @@
 function meetup() {
-  this.URL = 'https://qz4ZD8xq1:a0edfc7f-5611-46f6-8fe1-d4db234631f3@scalr.api.appbase.io';
-  this.credentials = 'qz4ZD8xq1:a0edfc7f-5611-46f6-8fe1-d4db234631f3';
+  this.URL = 'https://scalr.api.appbase.io';
+  this.USERNAME = 'qz4ZD8xq1';
+  this.PASSWORD = 'a0edfc7f-5611-46f6-8fe1-d4db234631f3';
   this.APPNAME = 'meetup2';
   this.CITY_PAYLOAD = {
    "size": "0",
@@ -47,9 +48,13 @@ meetup.prototype = {
   SEARCH_PAYLOAD: function() {
     var obj = {
       type: 'meetup',
+      stream: true,
       body: {
         "query": {
           "match_all": {}
+        }
+      }
+    };
           // "filtered": {
           //   "query": {
           //     "match_all": {}
@@ -70,9 +75,6 @@ meetup.prototype = {
           //     // ]
           //   }
           // }
-        }
-      }
-    };
     return obj;
   },
   SINGLE_RECORD: function(obj) {
@@ -132,7 +134,7 @@ meetup.prototype = {
     var search_payload = this.SEARCH_PAYLOAD();
 
     // search_payload['body']['query']['filtered']['filter'] = {};
-    // if($this.CITY_LIST.length || $this.TOPIC_LIST.length){      
+    // if($this.CITY_LIST.length || $this.TOPIC_LIST.length){
     //   search_payload['body']['query']['filtered']['filter'] = {'and':[]};
     // }
 
@@ -159,22 +161,32 @@ meetup.prototype = {
     console.log(JSON.stringify(search_payload));
     $('#record-container').html('');
 
-    if (typeof streamingClient != 'undefined')
-      streamingClient.streamSearch.stop();
-
+  //  if (typeof streamingClient != 'undefined')
+  //    streamingClient.stop();
+    console.log("reinstantiating...");
+    console.log(search_payload);
     var streamingClient = new appbase({
       url: $this.URL,
-      appname: $this.APPNAME
+      appname: $this.APPNAME,
+      username: $this.USERNAME,
+      password: $this.PASSWORD
     });
-    streamingClient.streamSearch(search_payload).on('data', function(res) {
+    streamingClient.streamSearch({
+      "type": "meetup",
+      "stream": true,
+      "body": {
+        "query": {"match_all": {}}
+      }
+    }).on('data', function(res) {
+      console.log("streaming results");
       console.log(res);
-      var record_array = res.hits.hits;
+    /*  var record_array = res.hits.hits;
       var record_length = record_array.length;
       for (var i = 0; i < record_length; i++) {
         var single_record = record_array[i];
         var single_record_html = $this.SINGLE_RECORD(single_record._source);
         $('#record-container').append(single_record_html);
-      }
+      }*/
     }).on('error', function(err) {
       console.log(err)
     });

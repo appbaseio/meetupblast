@@ -1,8 +1,8 @@
 $(document).ready(function(){
 	var meetup_val = new meetup();
-	
+
 	var app_process = {
-		
+
 		//Stream Meetup
 		stream_meetup:function(){
 			meetup_val.FIRE_FILTER();
@@ -14,7 +14,7 @@ $(document).ready(function(){
 			jQuery.ajax({
 		      type: "POST",
 		      beforeSend: function(request) {
-		        request.setRequestHeader("Authorization", "Basic " + btoa(meetup_val.credentials));
+		        request.setRequestHeader("Authorization", "Basic " + btoa(meetup_val.USERNAME+":"+meetup_val.PASSWORD));
 		      },
 		      'url':'http://scalr.api.appbase.io/meetup2/meetup/_search',
 		      dataType: 'json',
@@ -62,7 +62,7 @@ $(document).ready(function(){
 			jQuery.ajax({
 		      type: "POST",
 		      beforeSend: function(request) {
-		        request.setRequestHeader("Authorization", "Basic " + btoa(meetup_val.credentials));
+		        request.setRequestHeader("Authorization", "Basic " + btoa(meetup_val.USERNAME+":"+meetup_val.PASSWORD));
 		      },
 		      'url':'http://scalr.api.appbase.io/meetup2/meetup/_search',
 		      dataType: 'json',
@@ -104,8 +104,7 @@ $(document).ready(function(){
 			});
 		}
 	}
-	
-	app_process.stream_meetup();
-	app_process.city_list();	
-});
 
+	app_process.stream_meetup();
+	app_process.city_list();
+});

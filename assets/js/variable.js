@@ -67,17 +67,17 @@ meetup.prototype = {
             "match_all": {}
           },
           "filter": [
-          // {
-          //   "terms": {
-          //     "group.group_city": ["newport"]
-          //   }
-          // }
-          //,
-          // {
-          //   "terms": {
-          //      "group.group_topics.topic_name": "0"
-          //   }
-          // }
+          {
+            "terms": {
+            //  "group.group_city": ["newport"]
+            }
+          }
+          ,
+          {
+            "terms": {
+            //   "group.group_topics.topic_name": "0"
+            }
+          }
           ]
         }
       }
@@ -112,8 +112,9 @@ meetup.prototype = {
     checkbox.change(function() {
       var checkbox_val = $(this).val();
       var type = $(this).attr('container');
+      var check2 = checkbox_val.toLowerCase();
+        
       if ($(this).is(':checked')) {
-        var check2 = checkbox_val.toLowerCase();
         list.push(check2);
         var tag_text = $('<span>').addClass('tag_text').text(checkbox_val);
         var tag_close = $('<span>').addClass('tag_close').text('X').attr('val', checkbox_val);
@@ -121,14 +122,15 @@ meetup.prototype = {
         $(tag_close).click(function() {
           var val = $(this).attr('val');
           $(single_tag).remove();
-          list.remove(val);
+          list.remove(val.toLowerCase());
+          $this.FIRE_FILTER();
           container.find('.tag_checkbox[value="' + val + '"]').prop('checked', false);
         });
         container.find('.tag_name').append(single_tag);
         $this.FIRE_FILTER();
       } else {
         container.find('.single_tag[val="' + checkbox_val + '"]').remove();
-        list.remove();
+        list.remove(check2);
         $this.FIRE_FILTER();
       }
       //console.log(list);
@@ -139,26 +141,29 @@ meetup.prototype = {
     var $this = this
     var search_payload = this.SEARCH_PAYLOAD();    
     
+    search_payload['body']['query']['filtered']['filter'] = []; 
+    
     if($this.CITY_LIST.length){
       search_payload['body']['query']['filtered']['filter'][0] = {'terms': {"group.group_city" :$this.CITY_LIST}};
     }
-    else{
 
+    if($this.TOPIC_LIST.length){     
+      if($this.CITY_LIST.length) 
+        var ar_index = 1
+      else
+        var ar_index = 0;
+      search_payload['body']['query']['filtered']['filter'][ar_index] = {'terms' : { "group.group_topics.topic_name": $this.TOPIC_LIST}};
     }
 
-    if($this.TOPIC_LIST.length){      
-      search_payload['body']['query']['filtered']['filter'][1] = {'terms' : { "group.group_topics.topic_name": $this.TOPIC_LIST}};
-    }
-    else{
-
-    }
-    
     $('#record-container').html('');
+
+    if(typeof streamingClient != 'undefined')
+      streamingClient.streamSearch.stop();
+    
     var streamingClient = new appbase({
       url: $this.URL,
       appname: $this.APPNAME
     }); 
-
     streamingClient.streamSearch(search_payload).on('data', function(res) {
       console.log(res);
       var record_array = res.hits.hits;

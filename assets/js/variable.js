@@ -3,6 +3,7 @@ function meetup() {
   this.USERNAME = 'qz4ZD8xq1';
   this.PASSWORD = 'a0edfc7f-5611-46f6-8fe1-d4db234631f3';
   this.APPNAME = 'meetup2';
+  this.DEFAULT_IMAGE = 'http://www.avidog.com/wp-content/uploads/2015/01/BellaHead082712_11-50x65.jpg';
   this.CITY_PAYLOAD = {
     "size": "0",
     "query": {
@@ -99,7 +100,11 @@ meetup.prototype = {
   SINGLE_RECORD: function(obj) {
     var single_record = this.SINGLE_RECORD_ClONE.clone();
     single_record.removeClass('single_record_for_clone');
-    single_record.find('.record_img').attr("src", obj.member.photo);
+    single_record.find('.record_img').attr({
+      "src":obj.member.photo,
+      'onerror': 'this.onerror = null; this.src="' + this.DEFAULT_IMAGE + '"'
+     
+    });
     var text_head = '<span class="text-head-info text-overflow">'+obj.member.member_name+' is going to '+obj.event.event_name+'</span><span class="text-head-city">'+obj.group.group_city+'</span>';
     single_record.find('.text-head').html(text_head);
     var highlight_tags = this.HIGHLIGHT_TAGS(obj.group.group_topics);

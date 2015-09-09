@@ -12,7 +12,7 @@ $(document).ready(function(){
 		//Responsive
 		make_responsive:function(){			
 			function size_set(){
-				var window_height = $(window).height();
+				var window_height = $(window).height() - 15;
 				$('.meetup-record-holder').css('height',window_height);
 			};
 			size_set();

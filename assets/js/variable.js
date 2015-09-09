@@ -131,35 +131,6 @@ meetup.prototype = {
     for(i=0; i < lower; i++){
       highlight_tags += '<li>'+group_topics[i]['topic_name']+'</li>';
     }
-
-    // if(highlight.length){
-    //   if(highlight.length < 3){
-    //     highlight_tags = highlight.join(', ');
-    //     highlight_tags += ', ';        
-    //     var count_till = 3 - (highlight.length);
-    //     console.log(count_till, highlight.length);
-    //     for(i=0; i < group_topics.length; i++){
-    //       if(i<count_till-1)
-    //         highlight_tags += group_topics[i]['topic_name'] + ', ';
-    //        if(i<count_till)
-    //         highlight_tags += group_topics[i]['topic_name'];
-    //     }
-    //   }
-    //   else{
-    //     for(i=0; i < highlight.length; i++){
-    //       if(i<2)
-    //         highlight_tags += highlight[i]+', ';
-    //     }
-    //   }
-    // }
-    // else{      
-    //   for(j=0; j < group_topics.length; j++){
-    //     if(j<1)
-    //       highlight_tags += group_topics[j]['topic_name'] + ', ';
-    //     if(j<2)
-    //       highlight_tags += group_topics[j]['topic_name'];
-    //   }
-    // }
     return '<ul class="highlight_tags">'+highlight_tags+'</ul>';
   },
   CREATE_TAG: function(type, data) {

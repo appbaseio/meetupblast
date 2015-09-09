@@ -113,6 +113,7 @@
 .meetup-container{
     position: relative;
     overflow: auto;
+    margin-top: 15px;
 }
 .meetup-filter-container{
     position: absolute;
@@ -129,8 +130,31 @@
     float: left;
     padding-left: 0;
     list-style-position: inside;
+    overflow: hidden;
+    max-height: 24px;
 }
 .highlight_tags li{
     float: left;
     padding-right: 10px;
+}
+::-webkit-scrollbar {
+    width: 8px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(200,200,200,0.8); 
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(200,200,200,0.4); 
 }

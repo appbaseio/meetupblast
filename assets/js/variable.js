@@ -104,8 +104,8 @@ meetup.prototype = {
     var single_record = this.SINGLE_RECORD_ClONE.clone();
     single_record.removeClass('single_record_for_clone');
     single_record.find('.record_img').attr("src", obj.member.photo);
-    var text_head = obj.member.member_name+' is going to '+obj.event.event_name+' in '+obj.group.group_city;
-    single_record.find('.text-head').text(text_head);
+    var text_head = '<span class="text-head-info text-overflow">'+obj.member.member_name+' is going to '+obj.event.event_name+'</span><span class="text-head-city">'+obj.group.group_city+'</span>';
+    single_record.find('.text-head').html(text_head);
     var highlight_tags = this.HIGHLIGHT_TAGS(obj.group.group_topics);
     single_record.find('.text-description').html(highlight_tags);
     return single_record;

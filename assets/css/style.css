@@ -139,6 +139,21 @@
     float: left;
     padding-right: 10px;
 }
+.text-head-city{
+    position: absolute;
+    right: 10px;
+    top: 0;
+    font-size: 12px;
+    line-height: 25px;
+    color: #aaa;
+    font-weight: bold;
+}
+.text-head-info{
+    display: block;
+    width: 100%;
+    padding-right: 100px;
+    position: relative;
+}
 ::-webkit-scrollbar {
     width: 8px;
 }

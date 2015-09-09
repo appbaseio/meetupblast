@@ -132,7 +132,7 @@ meetup.prototype = {
       if ($(this).is(':checked')) {
         list.push(check2);
         var tag_text = $('<span>').addClass('tag_text').text(checkbox_val);
-        var tag_close = $('<span>').addClass('tag_close').text('X').attr('val', checkbox_val);
+        var tag_close = $('<span>').addClass('tag_close').text('x').attr('val', checkbox_val);
         var single_tag = $("<span>").addClass('single_tag').attr('val', checkbox_val).append(tag_text).append(tag_close);
         $(tag_close).click(function() {
           var val = $(this).attr('val');
@@ -155,7 +155,6 @@ meetup.prototype = {
   FIRE_FILTER: function() {
     var $this = this
     var streaming = this.GET_STREAMING_CLIENT();
-    // search_payload['body']['query']['filtered']['filter'] = {};
     if($this.CITY_LIST.length || $this.TOPIC_LIST.length){
       var search_payload = this.SEARCH_PAYLOAD('filter');
       

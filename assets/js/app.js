@@ -4,10 +4,22 @@ $(document).ready(function(){
 
 		//Stream Meetup
 		stream_meetup:function(){
+			app_process.make_responsive();
 			streamingClient = meetup_val.GET_STREAMING_CLIENT();
 			meetup_val.FIRE_FILTER(streamingClient);
 		},
 
+		//Responsive
+		make_responsive:function(){			
+			function size_set(){
+				var window_height = $(window).height();
+				$('.meetup-record-holder').css('height',window_height);
+			};
+			size_set();
+			$(window).resize(function(){
+				size_set();
+			});
+		},
 		//Get City
 		city_list:function(){
 			var request_data = JSON.stringify(meetup_val.CITY_PAYLOAD);

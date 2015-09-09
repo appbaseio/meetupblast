@@ -50,16 +50,21 @@ meetup.prototype = {
       var obj = {
         type: 'meetup',
         stream: true,
+        size: 20,
         body: {
           "query": {
             "match_all": {}
-          }
+          },
+          "sort": [
+            {"rsvp_id": {"order": "desc"}}
+          ]
         }
       };
     } else {
       var obj = {
         type: 'meetup',
         stream: true,
+        size: 20,
         body: {
           "query": {
             "filtered": {
@@ -68,25 +73,16 @@ meetup.prototype = {
               },
               "filter": {
                 "and": []
-                  //   // {
-                  //   //   "terms": {
-                  //   //   //  "group.group_city": ["newport"]
-                  //   //   }
-                  //   // }
-                  //   // ,
-                  //   // {
-                  //   //   "terms": {
-                  //   //   //   "group.group_topics.topic_name": "0"
-                  //   //   }
-                  //   // }
-                  // ]
               }
             }
-          }
+          },
+          "sort": [
+            {"rsvp_id": {"order": "desc"}}
+          ]
         }
       };
     }
-   
+
     return obj;
   },
   GET_STREAMING_CLIENT:function(){
@@ -121,7 +117,7 @@ meetup.prototype = {
           if(highlight[j] == group_topics[i])
             group_topics.splice(i,1);
         }
-      }               
+      }
       for(i=0; i < highlight.length; i++){
         highlight_tags += '<li>'+highlight[i]+'</li>';
       }
@@ -182,7 +178,7 @@ meetup.prototype = {
     var streaming = this.GET_STREAMING_CLIENT();
     if($this.CITY_LIST.length || $this.TOPIC_LIST.length){
       var search_payload = this.SEARCH_PAYLOAD('filter');
-      
+
       if ($this.CITY_LIST.length) {
         search_payload['body']['query']['filtered']['filter']['and'][0] = {
           'terms': {
@@ -205,7 +201,7 @@ meetup.prototype = {
       responseStream.stop();
     }
     else{
-      var search_payload = this.SEARCH_PAYLOAD('pure');  
+      var search_payload = this.SEARCH_PAYLOAD('pure');
     }
     responseStream = streaming.streamSearch(search_payload).on('data', function(res) {
         console.log(res);
@@ -223,7 +219,7 @@ meetup.prototype = {
               var single_record_html = $this.SINGLE_RECORD(single_record._source);
               $('#record-container').prepend(single_record_html);
         }
-        
+
     }).on('error', function(err) {
       console.log(err)
     });
@@ -236,8 +232,8 @@ meetup.prototype = {
 
     console.log("reinstantiating...");
     console.log(search_payload);
-   
-    
+
+
   }
 
 }

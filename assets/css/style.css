@@ -124,3 +124,13 @@
     padding-left: 250px;
     overflow: auto;
 }
+.highlight_tags{
+    display: block;
+    float: left;
+    padding-left: 0;
+    list-style-position: inside;
+}
+.highlight_tags li{
+    float: left;
+    padding-right: 10px;
+}

@@ -104,9 +104,63 @@ meetup.prototype = {
     var single_record = this.SINGLE_RECORD_ClONE.clone();
     single_record.removeClass('single_record_for_clone');
     single_record.find('.record_img').attr("src", obj.member.photo);
-    single_record.find('.text-head').text(obj.member.member_name);
-    single_record.find('.text-description').text(obj.event.event_name);
+    var text_head = obj.member.member_name+' is going to '+obj.event.event_name+' in '+obj.group.group_city;
+    single_record.find('.text-head').text(text_head);
+    var highlight_tags = this.HIGHLIGHT_TAGS(obj.group.group_topics);
+    single_record.find('.text-description').html(highlight_tags);
     return single_record;
+  },
+  HIGHLIGHT_TAGS:function(group_topics){
+    var highlight_tags = '';
+    var group_topics = group_topics;
+    var highlight = this.TOPIC_LIST;
+
+    if(highlight.length){
+      for(i=0; i < group_topics.length; i++){
+        for(var j = 0; j < highlight.length; j++){
+          if(highlight[j] == group_topics[i])
+            group_topics.splice(i,1);
+        }
+      }               
+      for(i=0; i < highlight.length; i++){
+        highlight_tags += '<li>'+highlight[i]+'</li>';
+      }
+    }
+
+    var lower = group_topics.length < 3 ? group_topics.length : 3;
+    for(i=0; i < lower; i++){
+      highlight_tags += '<li>'+group_topics[i]['topic_name']+'</li>';
+    }
+
+    // if(highlight.length){
+    //   if(highlight.length < 3){
+    //     highlight_tags = highlight.join(', ');
+    //     highlight_tags += ', ';        
+    //     var count_till = 3 - (highlight.length);
+    //     console.log(count_till, highlight.length);
+    //     for(i=0; i < group_topics.length; i++){
+    //       if(i<count_till-1)
+    //         highlight_tags += group_topics[i]['topic_name'] + ', ';
+    //        if(i<count_till)
+    //         highlight_tags += group_topics[i]['topic_name'];
+    //     }
+    //   }
+    //   else{
+    //     for(i=0; i < highlight.length; i++){
+    //       if(i<2)
+    //         highlight_tags += highlight[i]+', ';
+    //     }
+    //   }
+    // }
+    // else{      
+    //   for(j=0; j < group_topics.length; j++){
+    //     if(j<1)
+    //       highlight_tags += group_topics[j]['topic_name'] + ', ';
+    //     if(j<2)
+    //       highlight_tags += group_topics[j]['topic_name'];
+    //   }
+    // }
+    return '<ul class="highlight_tags">'+highlight_tags+'</ul>';
   },
   CREATE_TAG: function(type, data) {
     $this = this;

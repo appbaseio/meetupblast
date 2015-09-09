@@ -56,35 +56,38 @@
 .block{
     background: #fff;
     padding: 10px;
-        height: 250px;
-        float: left;
-            margin-bottom: 15px;
+    height: auto;
+    float: left;
+    margin-bottom: 15px;
 }
 .twitter-typeahead{
     width: 100%;
 }
 .twitter-typeahead .tt-menu{
   padding: 0 !important;
-    margin: 0;
-    height: auto !important;
-    max-height: 150px;
-    overflow: auto;
-    display: block !important
+  margin: 0;
+  height: auto !important;
+  max-height: 150px;
+  overflow: auto;
+  display: block !important;
+  position: relative !important;
+  float: left !important;
 }
 .twitter-typeahead label.tt-suggestion {
     width: 100%;
     display: block;
     float: left;
     padding: 5px 0;
+    font-weight: normal;
 }
 .twitter-typeahead .tt-suggestion input, .twitter-typeahead .tt-suggestion span {
     display: inline-block;
     float: left;
     line-height: 19px;
-    padding-left: 3px;
+    padding-left: 5px;
 }
 .block_label{
-        margin: 0;
+    margin: 0;
     font-size: 14px;
     line-height: 16px;
     float: left;
@@ -100,7 +103,8 @@
     padding: 3px 10px;
     font-size: 12px;
     border-radius: 5px;
-    margin-right: 5px;
+    margin: 5px 5px 0 0;
+    display: inline-block;
 }
 .tag_close{
     padding-left: 10px;

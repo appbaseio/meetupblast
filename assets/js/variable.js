@@ -106,6 +106,10 @@ meetup.prototype = {
      
     });
     var text_head = '<span class="text-head-info text-overflow">'+obj.member.member_name+' is going to '+obj.event.event_name+'</span><span class="text-head-city">'+obj.group.group_city+'</span>';
+    
+    single_record.attr({
+      href:obj.event.event_url
+    });
     single_record.find('.text-head').html(text_head);
     var highlight_tags = this.HIGHLIGHT_TAGS(obj.group.group_topics);
     single_record.find('.text-description').html(highlight_tags);

@@ -85,6 +85,7 @@ $(document).ready(function(){
 		    	$.each(cities, function (i, city) {
 			        topic_list.push(city.key);
 			    });
+			    var topic_icon = '<img src="images/search.png" class="search_thumb">';
 		        app_process.set_topic(topic_list);
 				$('.topic_search').typeahead('val', '').focus();
 				$('.city_search').typeahead('val', '').focus();

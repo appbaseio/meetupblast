@@ -106,7 +106,6 @@ meetup.prototype = {
      
     });
     var text_head = '<span class="text-head-info text-overflow">'+obj.member.member_name+' is going to '+obj.event.event_name+'</span><span class="text-head-city">'+obj.group.group_city+'</span>';
-    
     single_record.attr({
       href:obj.event.event_url
     });

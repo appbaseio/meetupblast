@@ -207,11 +207,12 @@ meetup.prototype = {
           }
         };
       }
-      responseStream.stop();
     }
     else{
       var search_payload = this.SEARCH_PAYLOAD('pure');
     }
+    if (typeof responseStream !== 'undefined')
+      responseStream.stop();
     responseStream = streaming.streamSearch(search_payload).on('data', function(res) {
         console.log(res);
         if(res.hasOwnProperty('hits')){
@@ -235,9 +236,6 @@ meetup.prototype = {
 
     console.log(JSON.stringify(search_payload));
     $('#record-container').html('');
-
-      // if (typeof streaming.streamSearch != 'undefined')
-      //   streaming.streamSearch.stop();
 
     console.log("reinstantiating...");
     console.log(search_payload);

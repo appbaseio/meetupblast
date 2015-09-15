@@ -51,7 +51,7 @@ meetup.prototype = {
       var obj = {
         type: 'meetup',
         stream: true,
-        size: 20,
+        size: 100,
         body: {
           "query": {
             "match_all": {}
@@ -65,7 +65,7 @@ meetup.prototype = {
       var obj = {
         type: 'meetup',
         stream: true,
-        size: 20,
+        size: 100,
         body: {
           "query": {
             "filtered": {
@@ -103,7 +103,7 @@ meetup.prototype = {
     single_record.find('.record_img').attr({
       "src":obj.member.photo,
       'onerror': 'this.onerror = null; this.src="' + this.DEFAULT_IMAGE + '"'
-     
+
     });
     var text_head = '<span class="text-head-info text-overflow">'+obj.member.member_name+' is going to '+obj.event.event_name+'</span><span class="text-head-city">'+obj.group.group_city+'</span>';
     single_record.attr({

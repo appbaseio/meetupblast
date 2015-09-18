@@ -51,7 +51,7 @@ meetup.prototype = {
       var obj = {
         type: 'meetup',
         stream: true,
-        size: 20,
+        size: 100,
         body: {
           "query": {
             "match_all": {}
@@ -65,7 +65,7 @@ meetup.prototype = {
       var obj = {
         type: 'meetup',
         stream: true,
-        size: 20,
+        size: 100,
         body: {
           "query": {
             "filtered": {
@@ -103,11 +103,12 @@ meetup.prototype = {
     single_record.find('.record_img').attr({
       "src":obj.member.photo,
       'onerror': 'this.onerror = null; this.src="' + this.DEFAULT_IMAGE + '"'
-     
+
     });
     var text_head = '<span class="text-head-info text-overflow">'+obj.member.member_name+' is going to '+obj.event.event_name+'</span><span class="text-head-city">'+obj.group.group_city+'</span>';
     single_record.attr({
-      href:obj.event.event_url
+      href:obj.event.event_url,
+      target:"_blank"
     });
     single_record.find('.text-head').html(text_head);
     var highlight_tags = this.HIGHLIGHT_TAGS(obj.group.group_topics);
@@ -206,11 +207,12 @@ meetup.prototype = {
           }
         };
       }
-      responseStream.stop();
     }
     else{
       var search_payload = this.SEARCH_PAYLOAD('pure');
     }
+    if (typeof responseStream !== 'undefined')
+      responseStream.stop();
     responseStream = streaming.streamSearch(search_payload).on('data', function(res) {
         console.log(res);
         if(res.hasOwnProperty('hits')){
@@ -234,9 +236,6 @@ meetup.prototype = {
 
     console.log(JSON.stringify(search_payload));
     $('#record-container').html('');
-
-      // if (typeof streaming.streamSearch != 'undefined')
-      //   streaming.streamSearch.stop();
 
     console.log("reinstantiating...");
     console.log(search_payload);

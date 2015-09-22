@@ -7,6 +7,7 @@ $(document).ready(function(){
 			app_process.make_responsive();
 			streamingClient = meetup_val.GET_STREAMING_CLIENT();
 			meetup_val.FIRE_FILTER(streamingClient);
+			app_process.pagination();
 		},
 
 		//Responsive
@@ -19,6 +20,14 @@ $(document).ready(function(){
 			$(window).resize(function(){
 				size_set();
 			});
+		},
+		//Pagination
+		pagination:function(){
+			$('.meetup-record-holder').on('scroll', function() {
+				if ($(this).scrollTop() + $(this).innerHeight() >= this.scrollHeight) {
+					meetup_val.PAGINATION();
+				}
+			});	
 		},
 		//Get City
 		city_list:function(){

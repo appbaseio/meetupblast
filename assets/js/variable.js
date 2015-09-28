@@ -42,15 +42,18 @@ function meetup() {
   this.SINGLE_RECORD_ClONE = $(".single_record_for_clone").clone();
   this.CITY_LIST = [];
   this.TOPIC_LIST = [];
+  this.FROM = 0;
+  this.PAGE_SIZE = 100;
 }
 
 meetup.prototype = {
   constructor: meetup,
   SEARCH_PAYLOAD: function(method) {
+    var $this = this;
     if (method == 'pure') {
       var obj = {
         type: 'meetup',
-        size: 100,
+        size: $this.PAGE_SIZE,
         body: {
           "query": {
             "match_all": {}
@@ -64,7 +67,7 @@ meetup.prototype = {
       var obj = {
         type: 'meetup',
         stream: true,
-        size: 100,
+        size: $this.PAGE_SIZE,
         body: {
           "query": {
             "filtered": {
@@ -181,9 +184,8 @@ meetup.prototype = {
     });
     return single_tag;
   },
-  FIRE_FILTER: function() {
-    var $this = this
-    var streaming = this.GET_STREAMING_CLIENT();
+  GET_PAYLOAD:function(){
+    var $this = this;
     if($this.CITY_LIST.length || $this.TOPIC_LIST.length){
       var search_payload = this.SEARCH_PAYLOAD('filter');
 
@@ -210,25 +212,44 @@ meetup.prototype = {
     else{
       var search_payload = this.SEARCH_PAYLOAD('pure');
     }
-    if (typeof responseStream !== 'undefined')
-      responseStream.stop();
-    responseStream = streaming.streamSearch(search_payload).on('data', function(res) {
-        console.log(res);
-        if(res.hasOwnProperty('hits')){
+    return search_payload;
+  },
+  SET_RECORDS:function(res, method){
+    var $this = this;
+     if(res.hasOwnProperty('hits')){
           var record_array = res.hits.hits;
           var record_length = record_array.length;
           for (var i = 0; i < record_length; i++) {
             var single_record = record_array[i];
             var single_record_html = $this.SINGLE_RECORD(single_record._source);
-            $('#record-container').prepend(single_record_html);
+            if(method == 'initialize'){
+              $('#record-container').prepend(single_record_html);
+            }
+            else{
+             $('#record-container').append(single_record_html);
+            }
           }
         }
         else{
               var single_record = res;
               var single_record_html = $this.SINGLE_RECORD(single_record._source);
+              if(method == 'initialize'){
               $('#record-container').prepend(single_record_html);
+            }
+            else{
+             $('#record-container').append(single_record_html);
+            }
         }
-
+      },
+  FIRE_FILTER: function() {
+    var $this = this;
+    $this.FROM = 0;
+    var streaming = this.GET_STREAMING_CLIENT();
+    var search_payload = this.GET_PAYLOAD();
+    if (typeof responseStream !== 'undefined')
+      responseStream.stop();
+    responseStream = streaming.streamSearch(search_payload).on('data', function(res) {
+       $this.SET_RECORDS(res, 'initialize');
     }).on('error', function(err) {
       console.log(err)
     });
@@ -238,8 +259,31 @@ meetup.prototype = {
 
     console.log("reinstantiating...");
     console.log(search_payload);
-
-
+  },
+  PAGINATION:function(){
+    var $this = this;
+    $this.FROM += $this.PAGE_SIZE;
+    var search_payload = this.GET_PAYLOAD();
+    delete search_payload.stream;
+    var search_payload_pagination = search_payload['body'];
+    search_payload_pagination['size'] = $this.PAGE_SIZE;
+    search_payload_pagination['from'] = $this.FROM;
+    request_data = JSON.stringify(search_payload_pagination);
+    var url = $this.URL;
+    var credentials = $this.USERNAME+":"+this.PASSWORD;
+    jQuery.ajax({
+      type: "POST",
+      beforeSend: function(request) {
+        request.setRequestHeader("Authorization", "Basic " + btoa(credentials));
+      },
+      'url':'http://scalr.api.appbase.io/meetup2/meetup/_search',
+      dataType: 'json',
+      contentType: "application/json",
+      data: request_data,
+      success: function(res) {
+       $this.SET_RECORDS(res, 'pagination');
+      }
+    });
   }
 
 }

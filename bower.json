@@ -1,7 +1,7 @@
 {
   "name": "meetuprsvp-ui",
   "dependencies": {
-    "appbase-js": "~0.2.0",
+    "appbase-js": "~0.4.0",
     "elasticsearch": "~6.0.0"
   }
 }

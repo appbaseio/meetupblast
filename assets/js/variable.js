@@ -50,7 +50,6 @@ meetup.prototype = {
     if (method == 'pure') {
       var obj = {
         type: 'meetup',
-        stream: true,
         size: 100,
         body: {
           "query": {
@@ -88,7 +87,7 @@ meetup.prototype = {
   },
   GET_STREAMING_CLIENT:function(){
       if(typeof streamingClient == 'undefined'){
-        streamingClient = new appbase({
+        streamingClient = new Appbase({
           url: this.URL,
           appname: this.APPNAME,
           username: this.USERNAME,

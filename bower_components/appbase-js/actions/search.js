@@ -1,4 +1,4 @@
-var streamSearchService = function streamSearchService(client, args) {
+var searchService = function searchService(client, args) {
 	this.args = args
 
 	var valid = this.validate()
@@ -10,27 +10,23 @@ var streamSearchService = function streamSearchService(client, args) {
 	var body = args.body
 	delete args.type
 	delete args.body
-	delete args.stream
 
-	if(args.streamonly === true || args.streamonly === 'true') {
-		args.streamonly = 'true'
+	if(type) {
+		path = type + '/_search'
 	} else {
-		args.stream = 'true'
+		path = '/_search'
 	}
 
-	return client.performWsRequest({
+	return client.performStreamingRequest({
 		method: 'POST',
-		path: type + '/_search',
+		path: path,
 		params: args,
 		body: body
 	})
 }
 
-streamSearchService.prototype.validate = function validate() {
+searchService.prototype.validate = function validate() {
 	var invalid = []
-	if(typeof this.args.type !== 'string' || this.args.type === '') {
-		invalid.push('type')
-	}
 	if(typeof this.args.body !== 'object' || this.args.body === null) {
 		invalid.push('body')
 	}
@@ -47,4 +43,4 @@ streamSearchService.prototype.validate = function validate() {
 	return true
 }
 
-module.exports = streamSearchService
+module.exports = searchService

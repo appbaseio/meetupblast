@@ -1,6 +1,7 @@
 var hyperquest = require('hyperquest')
 var JSONStream = require('JSONStream')
 var querystring = require('querystring')
+var through2 = require('through2')
 
 var streamingRequest = function streamingRequest(client, args) {
 	this.client = client
@@ -16,10 +17,6 @@ var streamingRequest = function streamingRequest(client, args) {
 
 	var resultStream = this.init()
 
-	if(this.requestStream.writable) {
-		this.requestStream.end(JSON.stringify(this.body))
-	}
-
 	return resultStream
 }
 
@@ -28,14 +25,17 @@ streamingRequest.prototype.init = function init() {
 
 	this.requestStream = hyperquest({
 		method: this.method,
-		uri: this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
-		auth: this.client.username + ':' + this.client.password
+		uri:  this.client.protocol + '//' + this.client.url + '/' + this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
+		auth: this.client.credentials
 	})
 	this.requestStream.on('response', function(res) {
 		that.response = res
 	})
+	this.requestStream.on('request', function(req) {
+		that.request = req
+	})
 
-	var resultStream = this.requestStream.pipe(JSONStream.parse())
+	var resultStream = this.requestStream.pipe(JSONStream.parse()).pipe(through2.obj())
 
 	this.requestStream.on('end', function() {
 		that.stop.apply(that)
@@ -46,20 +46,18 @@ streamingRequest.prototype.init = function init() {
 	})
 
 	this.requestStream.on('error', function(err) {
-		that.stop()
+		that.stop.apply(that)
 		process.nextTick(function() {
 			resultStream.emit('error', err)
 		})
 	})
 
-	resultStream.stop = function() {
-		that.stop.apply(that)
-	}
-	resultStream.getId = function(callback) {
-		that.getId.apply(that, [callback])
-	}
-	resultStream.reconnect = function() {
-		that.reconnect.apply(that)
+	resultStream.stop = this.stop.bind(this)
+	//resultStream.getId = this.getId.bind(this)
+	resultStream.reconnect = this.reconnect.bind(this)
+
+	if(this.requestStream.writable) {
+		this.requestStream.end(JSON.stringify(this.body))
 	}
 
 	return resultStream
@@ -76,11 +74,11 @@ streamingRequest.prototype.getId = function getId(callback) {
 }
 
 streamingRequest.prototype.stop = function stop() {
-	if(this.response) {
-		this.response.destroy()
+	if(this.request) {
+		this.request.destroy()
 	} else {
-		this.requestStream.on('response', function(res) {
-			res.destroy()
+		this.requestStream.on('request', function(req) {
+			req.destroy()
 		})
 	}
 }

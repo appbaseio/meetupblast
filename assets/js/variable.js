@@ -6,6 +6,7 @@ function meetup() {
 
 meetup.prototype = {
   constructor: meetup,
+  //creating meetup single records
   SINGLE_RECORD: function(obj) {
     var single_record = this.SINGLE_RECORD_ClONE.clone();
     single_record.removeClass('single_record_for_clone');
@@ -23,6 +24,7 @@ meetup.prototype = {
     single_record.find('.text-description').html(highlight_tags);
     return single_record;
   },
+  //Showing topics in each record on the basis of selected topics.
   HIGHLIGHT_TAGS:function(group_topics){
     var highlight_tags = '';
     var group_topics = group_topics;
@@ -46,6 +48,7 @@ meetup.prototype = {
     }
     return '<ul class="highlight_tags">'+highlight_tags+'</ul>';
   },
+  //create city or topic list items
   CREATE_TAG: function(type, data) {
     $this = this;
     var list = type == 'city' ? $this.REQUEST.CITY_LIST : $this.REQUEST.TOPIC_LIST;
@@ -67,6 +70,7 @@ meetup.prototype = {
     });
     return single_tag;
   },
+  //fire this function whenever user selecting/canceling city/topic
   CHECK_CHANGE:function(eve, list, container){
      var checkbox_val = $(eve).val();
       var type = $(eve).attr('container');
@@ -92,6 +96,7 @@ meetup.prototype = {
         $this.REQUEST.FIRE_FILTER();
       }
   },
+  //this function is the callback of fire_filter which takes the data and pass each data to single record
   SET_RECORDS:function(res, method){
     var $this = this;
      if(res.hasOwnProperty('hits')){

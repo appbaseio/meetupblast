@@ -15,6 +15,7 @@ function meetup_request(meetup_variable) {
 
 meetup_request.prototype = {
   constructor: meetup_request,
+  //Use to get list of city, topics - used in app.js only
   FILTER_PAYLOAD: function(method) {
     var field = method == 'city' ? 'group_city_simple':'topic_name_simple';
     var payload = {
@@ -36,6 +37,7 @@ meetup_request.prototype = {
     };
     return payload;
   },
+  //Return the payload for query on the basis of method
   SEARCH_PAYLOAD: function(method) {
     var $this = this;
     if (method == 'default') {
@@ -79,6 +81,7 @@ meetup_request.prototype = {
     }
     return obj;
   },
+  //Create streaming client only if already not created.
   GET_STREAMING_CLIENT: function() {
     if (typeof streamingClient == 'undefined') {
       streamingClient = new Appbase({
@@ -90,6 +93,7 @@ meetup_request.prototype = {
     }
     return streamingClient;
   },
+  //Create the payload on the basis of selected city, topics
   GET_PAYLOAD: function() {
     var $this = this;
     if ($this.CITY_LIST.length || $this.TOPIC_LIST.length) {
@@ -118,6 +122,7 @@ meetup_request.prototype = {
     }
     return search_payload;
   },
+  //Start and stop stream whenever selecting/canceling city/topic and also start initially in app.js
   FIRE_FILTER: function() {
     var $this = this;
     $this.FROM = 0;
@@ -137,6 +142,7 @@ meetup_request.prototype = {
     console.log("reinstantiating...");
     console.log(search_payload);
   },
+  //whenever user reaches at the bottom fire this function - used in app.js
   PAGINATION: function() {
     var $this = this;
     $this.FROM += $this.PAGE_SIZE;

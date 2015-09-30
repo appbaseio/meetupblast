@@ -38,7 +38,7 @@ meetup_request.prototype = {
   },
   SEARCH_PAYLOAD: function(method) {
     var $this = this;
-    if (method == 'pure') {
+    if (method == 'default') {
       var obj = {
         type: 'meetup',
         size: $this.PAGE_SIZE,
@@ -53,7 +53,7 @@ meetup_request.prototype = {
           }]
         }
       };
-    } else {
+    } else if(method == 'filter'){
       var obj = {
         type: 'meetup',
         stream: true,
@@ -114,7 +114,7 @@ meetup_request.prototype = {
         };
       }
     } else {
-      var search_payload = $this.SEARCH_PAYLOAD('pure');
+      var search_payload = $this.SEARCH_PAYLOAD('default');
     }
     return search_payload;
   },

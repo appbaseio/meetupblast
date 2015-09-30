@@ -146,14 +146,13 @@ meetup_request.prototype = {
     search_payload_pagination['size'] = $this.PAGE_SIZE;
     search_payload_pagination['from'] = $this.FROM;
     request_data = JSON.stringify(search_payload_pagination);
-    var url = $this.URL;
     var credentials = $this.USERNAME + ":" + this.PASSWORD;
     jQuery.ajax({
       type: "POST",
       beforeSend: function(request) {
         request.setRequestHeader("Authorization", "Basic " + btoa(credentials));
       },
-      'url': 'http://scalr.api.appbase.io/meetup2/meetup/_search',
+      'url': $this.FILTER_URL,
       dataType: 'json',
       contentType: "application/json",
       data: request_data,

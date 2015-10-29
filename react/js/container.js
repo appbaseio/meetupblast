@@ -41,7 +41,6 @@ var Container = React.createClass({
     },
     on_get_data:function(res, append){
         var $this = this;
-        responseStream.stop();
         if(res.hasOwnProperty('hits')){
             var record_array = res.hits.hits;
             if(append){
@@ -84,3 +83,5 @@ var Container = React.createClass({
         );
     }   
 });
+//responseStream.stop();
+        

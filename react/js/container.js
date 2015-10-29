@@ -46,7 +46,7 @@ var Container = React.createClass({
             var record_array = res.hits.hits;
             if(append){
                 var arr = $this.state.users;
-                var new_array = $.merge(record_array, arr);
+                var new_array = $.merge(arr, record_array);
                 $this.setState({users:new_array});
             }
             else

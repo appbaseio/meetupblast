@@ -41,6 +41,7 @@ var Container = React.createClass({
     },
     on_get_data:function(res, append){
         var $this = this;
+        //responseStream.stop();
         if(res.hasOwnProperty('hits')){
             var record_array = res.hits.hits;
             if(append){
@@ -71,7 +72,7 @@ var Container = React.createClass({
                                         name={single_user.member.member_name}
                                         img={single_user.member.photo}
                                         event_name={single_user.event.event_name}
-                                        group_city={single_user.event.group_city}
+                                        group_city={single_user.group.group_city}
                                         group_topics={single_user.group.group_topics}
                                         event_url={single_user.event.event_url}
                                      ></User>
@@ -83,5 +84,3 @@ var Container = React.createClass({
         );
     }   
 });
-//responseStream.stop();
-        

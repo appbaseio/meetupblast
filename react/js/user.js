@@ -1,31 +1,10 @@
-//User Image component
-var UserImg = React.createClass({
+//User component
+var User = React.createClass({
     getDefaultProps:function(){
         return {
             DEFAULT_IMAGE:'http://www.avidog.com/wp-content/uploads/2015/01/BellaHead082712_11-50x65.jpg'
         };
-    },
-    getInitialState: function () {    
-      return { src: this.props.src };
-    }, 
-    componentDidMount: function () {
-        var self = this;
-        var img = new Image();
-        img.onerror = function () {
-            self.setState({ src: self.props.DEFAULT_IMAGE });
-        };
-        img.src = this.state.src;
-
-    },
-    render:function(){
-        return (
-            <img className="record_img" src={this.state.src} alt="img" />
-        )
-    }
-});
-
-//User component
-var User = React.createClass({
+    },    
     HIGHLIGHT_TAGS:function(group_topics){
         var highlight_tags = [];
         var group_topics = group_topics;
@@ -51,12 +30,16 @@ var User = React.createClass({
     },
     render:function(){
         var highlight_tags = this.HIGHLIGHT_TAGS(this.props.group_topics);
+        var error_img = 'this.onerror = null; this.src="'+this.props.DEFAULT_IMAGE;
         return (
                 <a className="full_row single-record single_record_for_clone"
                     href={this.props.event_url}
                     target="_blank">
                     <div className="img-container">
-                        <UserImg src={this.props.img}></UserImg>
+                        <img className="record_img" 
+                            src={this.props.img}
+                            onerror= {error_img}
+                            alt='img' />
                     </div>
                     <div className="text-container full_row">
                         <div className="text-head text-overflow full_row">

@@ -36,6 +36,16 @@ var Container = React.createClass({
         var stream_on = REQUEST.FIRE_FILTER();
         stream_on.on('data', function(res) {
             $this.on_get_data(res);
+            $this.stream_start();
+        }).on('error', function(err) {
+        });
+    },
+    stream_start:function(){
+         var $this = this;
+        streamingClient = REQUEST.GET_STREAMING_CLIENT();
+        var stream_on = REQUEST.STREAM_START();
+        stream_on.on('data', function(res) {
+            $this.on_get_data(res);
         }).on('error', function(err) {
         });
     },

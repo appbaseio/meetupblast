@@ -59,8 +59,10 @@ var Container = React.createClass({
                 var new_array = $.merge(arr, record_array);
                 $this.setState({users:new_array});
             }
-            else
-                $this.setState({users:record_array});    
+            else{
+                    record_array = record_array.reverse();
+                    $this.setState({users:record_array});  
+                }  
         }
         else{
             var arr = $this.state.users;

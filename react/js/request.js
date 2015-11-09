@@ -10,7 +10,7 @@ function meetup_request(meetup_variable) {
   this.CITY_LIST = [];
   this.TOPIC_LIST = [];
   this.FROM = 0;
-  this.PAGE_SIZE = 10;
+  this.PAGE_SIZE = 100;
 }
 
 meetup_request.prototype = {

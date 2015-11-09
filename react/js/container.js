@@ -45,7 +45,7 @@ var Container = React.createClass({
         streamingClient = REQUEST.GET_STREAMING_CLIENT();
         var stream_on = REQUEST.STREAM_START();
         stream_on.on('data', function(res) {
-            $this.on_get_data(res);
+            $this.on_get_data(res, true);
         }).on('error', function(err) {
         });
     },

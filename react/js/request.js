@@ -128,28 +128,8 @@ meetup_request.prototype = {
     $this.FROM = 0;
     var streaming = this.GET_STREAMING_CLIENT();
     var search_payload = this.GET_PAYLOAD();
+    delete search_payload.stream;
     return streaming.search(search_payload);
-
-    //  streaming.search(search_payload).on('data', function(res) {
-    //   $this.meetup_variable.SET_RECORDS(res, 'initialize');
-
-    //   //Stream after getting search result
-    //   if (typeof responseStream !== 'undefined') {
-    //     responseStream.stop();
-    //   }
-    //   var search_payload = $this.GET_PAYLOAD();
-    //   delete search_payload.size;
-    //   responseStream = streaming.streamSearch(search_payload).on('data', function(stream_response) {
-    //     $this.meetup_variable.SET_RECORDS(stream_response, 'initialize');
-    //   }).on('error', function(err) {
-    //     console.log(err)
-    //   });
-
-
-    // }).on('error', function(err) {
-    //   console.log(err)
-    // });
-
 
     console.log(JSON.stringify(search_payload));
     $('#record-container').html('');

@@ -59,7 +59,6 @@ var Tag = React.createClass({
             minLength: 0
         }, {
             name: method,
-            limit: 1000,
             source: substringMatcher(list),
             templates: {
                 pending: true,

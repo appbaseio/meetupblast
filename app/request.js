@@ -129,6 +129,7 @@ meetup_request.prototype = {
     var streaming = this.GET_STREAMING_CLIENT();
     var search_payload = this.GET_PAYLOAD();
 
+    delete search_payload.stream;
     streaming.search(search_payload).on('data', function(res) {
       $this.meetup_variable.SET_RECORDS(res, 'initialize');
       $this.STREAM_START();

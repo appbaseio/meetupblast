@@ -9,7 +9,6 @@ var Tag = React.createClass({
         var checkbox_val = $(eve).val();
         var type = $(eve).attr('container');
         var check2 = checkbox_val;
-
           if ($(eve).is(':checked')) {
             list.push(check2);
             var tag_text = $('<span>').addClass('tag_text').text(checkbox_val);

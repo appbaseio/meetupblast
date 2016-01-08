@@ -1,5 +1,7 @@
 var React = require('react');
 
+var UserImg = require('./userImg.jsx'); 
+
 //User component
 var User = React.createClass({
     getDefaultProps:function(){
@@ -30,19 +32,21 @@ var User = React.createClass({
         }
         return highlight_tags;
     },
+    handleError: function(event) {
+      alert(1);
+      this.setState({errored: true});
+    },
     render:function(){
         var highlight_tags = this.HIGHLIGHT_TAGS(this.props.group_topics);
         var error_img = 'this.onerror = null; this.src="'+this.props.DEFAULT_IMAGE;
+       
         return (
                 <a className="full_row single-record single_record_for_clone"
                     href={this.props.event_url}
                     target="_blank"
                     key="1">
                     <div className="img-container">
-                        <img key="2" className="record_img" 
-                            src={this.props.img}
-                            onerror= {error_img}
-                            alt='img' />
+                        <UserImg key={this.props.event_url} src={this.props.img} />
                     </div>
                     <div className="text-container full_row">
                         <div className="text-head text-overflow full_row">

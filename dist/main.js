@@ -19027,6 +19027,8 @@ module.exports = require('./lib/React');
 },{"./lib/React":53}],159:[function(require,module,exports){
 var React = require('react');
 
+var UserImg = require('./userImg.jsx'); 
+
 //User component
 var User = React.createClass({displayName: "User",
     getDefaultProps:function(){
@@ -19057,19 +19059,21 @@ var User = React.createClass({displayName: "User",
         }
         return highlight_tags;
     },
+    handleError: function(event) {
+      alert(1);
+      this.setState({errored: true});
+    },
     render:function(){
         var highlight_tags = this.HIGHLIGHT_TAGS(this.props.group_topics);
         var error_img = 'this.onerror = null; this.src="'+this.props.DEFAULT_IMAGE;
+       
         return (
                 React.createElement("a", {className: "full_row single-record single_record_for_clone", 
                     href: this.props.event_url, 
                     target: "_blank", 
                     key: "1"}, 
                     React.createElement("div", {className: "img-container"}, 
-                        React.createElement("img", {key: "2", className: "record_img", 
-                            src: this.props.img, 
-                            onerror: error_img, 
-                            alt: "img"})
+                        React.createElement(UserImg, {key: this.props.event_url, src: this.props.img})
                     ), 
                     React.createElement("div", {className: "text-container full_row"}, 
                         React.createElement("div", {className: "text-head text-overflow full_row"}, 
@@ -19096,7 +19100,7 @@ var User = React.createClass({displayName: "User",
 
 module.exports = User;
 
-},{"react":158}],160:[function(require,module,exports){
+},{"./userImg.jsx":164,"react":158}],160:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
 
@@ -19355,5 +19359,29 @@ var Tag = React.createClass({displayName: "Tag",
 
 
 module.exports = Tag;
+
+},{"react":158}],164:[function(require,module,exports){
+var React = require('react');
+
+var UserImg = React.createClass({displayName: "UserImg",
+    componentDidMount: function () {
+        var self = this;
+        this.img = new Image();
+        var defaultSrc = 'http://www.avidog.com/wp-content/uploads/2015/01/BellaHead082712_11-50x65.jpg';
+        this.img.onerror = function () {
+            if(self.isMounted()) {
+                self.setState({ src: defaultSrc });
+            }
+        };
+        this.img.src = this.state.src;
+    },
+    getInitialState: function () {    
+      return { src: this.props.src };
+    },
+    render: function () {
+        return React.createElement("img", {src: this.state.src});
+    }
+});
+module.exports = UserImg;
 
 },{"react":158}]},{},[160]);

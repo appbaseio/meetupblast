@@ -1,6 +1,8 @@
 {
   "name": "meetuprsvp-ui",
   "dependencies": {
-    "appbase-js": "~0.10.0"
+    "appbase-js": "~0.10.0",
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.6"
   }
 }

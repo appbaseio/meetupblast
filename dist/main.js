@@ -19063,9 +19063,10 @@ var User = React.createClass({displayName: "User",
         return (
                 React.createElement("a", {className: "full_row single-record single_record_for_clone", 
                     href: this.props.event_url, 
-                    target: "_blank"}, 
+                    target: "_blank", 
+                    key: "1"}, 
                     React.createElement("div", {className: "img-container"}, 
-                        React.createElement("img", {className: "record_img", 
+                        React.createElement("img", {key: "2", className: "record_img", 
                             src: this.props.img, 
                             onerror: error_img, 
                             alt: "img"})
@@ -19081,7 +19082,7 @@ var User = React.createClass({displayName: "User",
                             React.createElement("ul", {className: "highlight_tags"}, 
                                 
                                     highlight_tags.map(function(tag,i){
-                                        return (React.createElement("li", null, tag))
+                                        return (React.createElement("li", {key: i}, tag))
                                     })
                                 
                             )
@@ -19186,13 +19187,15 @@ var Container = React.createClass({displayName: "Container",
         var $this = this;
         return (
                 React.createElement("div", {className: "row meetup-container"}, 
-                    React.createElement(FilterContainer, {fire_response: this.fire_response}), 
+                    React.createElement(FilterContainer, {key: "1", fire_response: this.fire_response}), 
                     React.createElement("div", {className: "meetup-record-holder", id: "meetup-record-holder"}, 
                         React.createElement("div", {className: "container full_row", id: "record-container"}, 
                             this.state.users.map(function(single_user1, i){
                                 var single_user = single_user1._source;
                                 return (
-                                    React.createElement(User, {index: i, 
+                                    React.createElement(User, {
+                                        key: i, 
+                                        index: i, 
                                         name: single_user.member.member_name, 
                                         img: single_user.member.photo, 
                                         event_name: single_user.event.event_name, 
@@ -19343,7 +19346,7 @@ var Tag = React.createClass({displayName: "Tag",
                     ), 
                     React.createElement("div", {className: "full_row"}, 
                         React.createElement("input", {type: "text", placeholder: "search", className: method}), 
-                        React.createElement("img", {src: "../assets/images/search.png", className: "search_thumb"})
+                        React.createElement("img", {src: "assets/images/search.png", className: "search_thumb"})
                     )
                 )       
         );

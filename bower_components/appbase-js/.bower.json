@@ -1,6 +1,6 @@
 {
   "name": "appbase-js",
-  "version": "0.5.0",
+  "version": "0.10.0",
   "homepage": "https://github.com/appbaseio/appbase-js",
   "authors": [
     "Sacheendra Talluri <sacheendra.t@gmail.com>"
@@ -24,13 +24,14 @@
     "test",
     "tests"
   ],
-  "_release": "0.5.0",
+  "_release": "0.10.0",
   "_resolution": {
     "type": "version",
-    "tag": "v0.5.0",
-    "commit": "db1a39aafe66f2a36658e5c41b15fa07ecb5f698"
+    "tag": "v0.10.0",
+    "commit": "994d186adfbeb0bdc6998ef87a9e65842b711a8e"
   },
   "_source": "git://github.com/appbaseio/appbase-js.git",
-  "_target": "*",
-  "_originalSource": "appbase-js"
+  "_target": "~0.10.0",
+  "_originalSource": "appbase-js",
+  "_direct": true
 }

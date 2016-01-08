@@ -5,10 +5,13 @@ var streamingRequest = require('./streaming_request.js')
 var wsRequest = require('./websocket_request.js')
 
 var indexService = require('./actions/index.js')
+var getService = require('./actions/get.js')
 var updateService = require('./actions/update.js')
 var deleteService = require('./actions/delete.js')
 var bulkService = require('./actions/bulk.js')
 var searchService = require('./actions/search.js')
+var getTypesService = require('./actions/get_types.js')
+var addWebhookService = require('./actions/webhook.js')
 
 var streamDocumentService = require('./actions/stream_document.js')
 var streamSearchService = require('./actions/stream_search.js')
@@ -58,12 +61,15 @@ var appbaseClient = function appbaseClient(args) {
 	var client = {}
 
 	client.index = this.index.bind(this)
+	client.get = this.get.bind(this)
 	client.update = this.update.bind(this)
 	client.delete = this.delete.bind(this)
 	client.bulk = this.bulk.bind(this)
 	client.search = this.search.bind(this)
-	client.streamDocument = this.streamDocument.bind(this)
-	client.streamSearch = this.streamSearch.bind(this)
+	client.getStream = this.getStream.bind(this)
+	client.searchStream = this.searchStream.bind(this)
+	client.searchStreamToURL = this.searchStreamToURL.bind(this)
+	client.getTypes = this.getTypes.bind(this)
 
 	return client
 }
@@ -78,6 +84,10 @@ appbaseClient.prototype.performStreamingRequest = function performStreamingReque
 
 appbaseClient.prototype.index = function index(args) {
 	return new indexService(this, args)
+}
+
+appbaseClient.prototype.get = function get(args) {
+	return new getService(this, args)
 }
 
 appbaseClient.prototype.update = function update(args) {
@@ -96,12 +106,20 @@ appbaseClient.prototype.search = function search(args) {
 	return new searchService(this, args)
 }
 
-appbaseClient.prototype.streamDocument = function streamDocument(args) {
+appbaseClient.prototype.getStream = function getStream(args) {
 	return new streamDocumentService(this, args)
 }
 
-appbaseClient.prototype.streamSearch = function streamSearch(args) {
+appbaseClient.prototype.searchStream = function searchStream(args) {
 	return new streamSearchService(this, args)
+}
+
+appbaseClient.prototype.searchStreamToURL = function searchStreamToURL(args, webhook) {
+	return new addWebhookService(this, args, webhook)
+}
+
+appbaseClient.prototype.getTypes = function getTypes() {
+	return new getTypesService(this)
 }
 
 if(typeof window !== 'undefined') {

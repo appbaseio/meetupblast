@@ -1,3 +1,5 @@
+var React = require('react');
+
 //User component
 var User = React.createClass({
     getDefaultProps:function(){
@@ -62,3 +64,6 @@ var User = React.createClass({
             )
     }   
 });
+
+
+module.exports = User;

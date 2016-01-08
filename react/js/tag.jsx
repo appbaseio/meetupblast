@@ -1,3 +1,4 @@
+var React = require('react');
 var Tag = React.createClass({
     getInitialState: function() {
         return {
@@ -113,3 +114,6 @@ var Tag = React.createClass({
         );
     }   
 });
+
+
+module.exports = Tag;

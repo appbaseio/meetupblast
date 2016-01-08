@@ -1,3 +1,6 @@
+var React = require('react');
+var Tag = require('./tag.jsx');
+
 var FilterContainer = React.createClass({
     fire_response:function(){
         this.props.fire_response();
@@ -11,3 +14,6 @@ var FilterContainer = React.createClass({
         )
     }   
 });
+
+
+module.exports = FilterContainer;

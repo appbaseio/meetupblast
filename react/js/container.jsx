@@ -1,3 +1,7 @@
+var React = require('react');
+var FilterContainer = require('./filterContainer.jsx');
+var User = require('./User.jsx');
+
 var Container = React.createClass({
     getInitialState: function() {
         return {
@@ -96,3 +100,5 @@ var Container = React.createClass({
         );
     }   
 });
+
+module.exports = Container;

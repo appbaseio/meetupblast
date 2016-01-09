@@ -138,7 +138,7 @@ meetup_request.prototype = {
     console.log(search_payload);
   },
   //Start stream
-  STREAM_START:function(){
+  STREAM_START: function() {
     var $this = this;
     var streaming = this.GET_STREAMING_CLIENT();
     var search_payload = this.GET_PAYLOAD();

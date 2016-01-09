@@ -8,10 +8,10 @@ var Container = React.createClass({
             users: []
         };
     },
-    componentWillMount:function(){
+    componentWillMount: function() {
         this.fire_response();
-    },    
-    componentDidMount:function(){
+    },
+    componentDidMount: function() {
         var $this = this;
         this.make_responsive();
         $('.meetup-record-holder').on('scroll', function() {
@@ -19,8 +19,7 @@ var Container = React.createClass({
                 var stream_on = REQUEST.PAGINATION();
                 stream_on.done(function(res) {
                     $this.on_get_data(res, true);
-                }).fail('error', function(err) {
-                });
+                }).fail('error', function(err) {});
             }
         });
     },
@@ -34,44 +33,46 @@ var Container = React.createClass({
             size_set();
         });
     },
-    fire_response:function(){
+    fire_response: function() {
         var $this = this;
         streamingClient = REQUEST.GET_STREAMING_CLIENT();
         var stream_on = REQUEST.FIRE_FILTER();
         stream_on.on('data', function(res) {
             $this.on_get_data(res);
             $this.stream_start();
-        }).on('error', function(err) {
-        });
+        }).on('error', function(err) {});
     },
-    stream_start:function(){
-         var $this = this;
+    stream_start: function() {
+        var $this = this;
         streamingClient = REQUEST.GET_STREAMING_CLIENT();
         var stream_on = REQUEST.STREAM_START();
         stream_on.on('data', function(res) {
             $this.on_get_data(res, true);
-        }).on('error', function(err) {
-        });
+        }).on('error', function(err) {});
     },
-    on_get_data:function(res, append){
+    on_get_data: function(res, append) {
         var $this = this;
         //responseStream.stop();
-        if(res.hasOwnProperty('hits')){
+        if (res.hasOwnProperty('hits')) {
             var record_array = res.hits.hits;
-            if(append){
+            if (append) {
                 var arr = $this.state.users;
                 var new_array = $.merge(arr, record_array);
-                $this.setState({users:new_array});
+                $this.setState({
+                    users: new_array
+                });
+            } else {
+                record_array = record_array.reverse();
+                $this.setState({
+                    users: record_array
+                });
             }
-            else{
-                    record_array = record_array.reverse();
-                    $this.setState({users:record_array});  
-                }  
-        }
-        else{
+        } else {
             var arr = $this.state.users;
             arr.unshift(res);
-            $this.setState({users:arr});
+            $this.setState({
+                users: arr
+            });
         }
     },
     render: function() {
@@ -100,7 +101,7 @@ var Container = React.createClass({
                     </div>
                 </div>
         );
-    }   
+    }
 });
 
 module.exports = Container;

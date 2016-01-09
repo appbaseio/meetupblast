@@ -19027,46 +19027,48 @@ module.exports = require('./lib/React');
 },{"./lib/React":53}],159:[function(require,module,exports){
 var React = require('react');
 
-var UserImg = require('./userImg.jsx'); 
+var UserImg = require('./userImg.jsx');
 
 //User component
 var User = React.createClass({displayName: "User",
-    getDefaultProps:function(){
+    getDefaultProps: function() {
         return {
-            DEFAULT_IMAGE:'http://www.avidog.com/wp-content/uploads/2015/01/BellaHead082712_11-50x65.jpg'
+            DEFAULT_IMAGE: 'http://www.avidog.com/wp-content/uploads/2015/01/BellaHead082712_11-50x65.jpg'
         };
-    },    
-    HIGHLIGHT_TAGS:function(group_topics){
+    },
+    HIGHLIGHT_TAGS: function(group_topics) {
         var highlight_tags = [];
         var group_topics = group_topics;
         var highlight = REQUEST.TOPIC_LIST;
 
-        if(highlight.length){
-          for(i=0; i < group_topics.length; i++){
-            for(var j = 0; j < highlight.length; j++){
-              if(highlight[j] == group_topics[i])
-                group_topics.splice(i,1);
+        if (highlight.length) {
+            for (i = 0; i < group_topics.length; i++) {
+                for (var j = 0; j < highlight.length; j++) {
+                    if (highlight[j] == group_topics[i])
+                        group_topics.splice(i, 1);
+                }
             }
-          }
-          for(i=0; i < highlight.length; i++){
-            highlight_tags.push(highlight[i]);
-          }
+            for (i = 0; i < highlight.length; i++) {
+                highlight_tags.push(highlight[i]);
+            }
         }
 
         var lower = group_topics.length < 3 ? group_topics.length : 3;
-        for(i=0; i < lower; i++){
-          highlight_tags.push(group_topics[i]['topic_name']);
+        for (i = 0; i < lower; i++) {
+            highlight_tags.push(group_topics[i]['topic_name']);
         }
         return highlight_tags;
     },
     handleError: function(event) {
-      alert(1);
-      this.setState({errored: true});
+        alert(1);
+        this.setState({
+            errored: true
+        });
     },
-    render:function(){
+    render: function() {
         var highlight_tags = this.HIGHLIGHT_TAGS(this.props.group_topics);
-        var error_img = 'this.onerror = null; this.src="'+this.props.DEFAULT_IMAGE;
-       
+        var error_img = 'this.onerror = null; this.src="' + this.props.DEFAULT_IMAGE;
+
         return (
                 React.createElement("a", {className: "full_row single-record single_record_for_clone", 
                     href: this.props.event_url, 
@@ -19093,8 +19095,8 @@ var User = React.createClass({displayName: "User",
                         )
                     )
                 )
-            )
-    }   
+        )
+    }
 });
 
 
@@ -19121,10 +19123,10 @@ var Container = React.createClass({displayName: "Container",
             users: []
         };
     },
-    componentWillMount:function(){
+    componentWillMount: function() {
         this.fire_response();
-    },    
-    componentDidMount:function(){
+    },
+    componentDidMount: function() {
         var $this = this;
         this.make_responsive();
         $('.meetup-record-holder').on('scroll', function() {
@@ -19132,8 +19134,7 @@ var Container = React.createClass({displayName: "Container",
                 var stream_on = REQUEST.PAGINATION();
                 stream_on.done(function(res) {
                     $this.on_get_data(res, true);
-                }).fail('error', function(err) {
-                });
+                }).fail('error', function(err) {});
             }
         });
     },
@@ -19147,44 +19148,46 @@ var Container = React.createClass({displayName: "Container",
             size_set();
         });
     },
-    fire_response:function(){
+    fire_response: function() {
         var $this = this;
         streamingClient = REQUEST.GET_STREAMING_CLIENT();
         var stream_on = REQUEST.FIRE_FILTER();
         stream_on.on('data', function(res) {
             $this.on_get_data(res);
             $this.stream_start();
-        }).on('error', function(err) {
-        });
+        }).on('error', function(err) {});
     },
-    stream_start:function(){
-         var $this = this;
+    stream_start: function() {
+        var $this = this;
         streamingClient = REQUEST.GET_STREAMING_CLIENT();
         var stream_on = REQUEST.STREAM_START();
         stream_on.on('data', function(res) {
             $this.on_get_data(res, true);
-        }).on('error', function(err) {
-        });
+        }).on('error', function(err) {});
     },
-    on_get_data:function(res, append){
+    on_get_data: function(res, append) {
         var $this = this;
         //responseStream.stop();
-        if(res.hasOwnProperty('hits')){
+        if (res.hasOwnProperty('hits')) {
             var record_array = res.hits.hits;
-            if(append){
+            if (append) {
                 var arr = $this.state.users;
                 var new_array = $.merge(arr, record_array);
-                $this.setState({users:new_array});
+                $this.setState({
+                    users: new_array
+                });
+            } else {
+                record_array = record_array.reverse();
+                $this.setState({
+                    users: record_array
+                });
             }
-            else{
-                    record_array = record_array.reverse();
-                    $this.setState({users:record_array});  
-                }  
-        }
-        else{
+        } else {
             var arr = $this.state.users;
             arr.unshift(res);
-            $this.setState({users:arr});
+            $this.setState({
+                users: arr
+            });
         }
     },
     render: function() {
@@ -19213,7 +19216,7 @@ var Container = React.createClass({displayName: "Container",
                     )
                 )
         );
-    }   
+    }
 });
 
 module.exports = Container;
@@ -19223,7 +19226,7 @@ var React = require('react');
 var Tag = require('./tag.jsx');
 
 var FilterContainer = React.createClass({displayName: "FilterContainer",
-    fire_response:function(){
+    fire_response: function() {
         this.props.fire_response();
     },
     render: function() {
@@ -19233,7 +19236,7 @@ var FilterContainer = React.createClass({displayName: "FilterContainer",
                     React.createElement(Tag, {key: "1", type: "topic", fire_response: this.fire_response})
                 )
         )
-    }   
+    }
 });
 
 
@@ -19247,53 +19250,53 @@ var Tag = React.createClass({displayName: "Tag",
             list: []
         };
     },
-    CHECK_CHANGE:function(eve, list, container){
+    CHECK_CHANGE: function(eve, list, container) {
         var $this = this;
         var checkbox_val = $(eve).val();
         var type = $(eve).attr('container');
         var check2 = checkbox_val;
-          if ($(eve).is(':checked')) {
+        if ($(eve).is(':checked')) {
             list.push(check2);
             var tag_text = $('<span>').addClass('tag_text').text(checkbox_val);
             var tag_close = $('<span>').addClass('tag_close').text('x').attr('val', checkbox_val);
             var single_tag = $("<span>").addClass('single_tag').attr('val', checkbox_val).append(tag_text).append(tag_close);
             $(tag_close).click(function() {
-              var val = $(this).attr('val');
-              $(single_tag).remove();
-              list.remove(val);
-              $this.props.fire_response();
-              container.find('.tag_checkbox[value="' + val + '"]').prop('checked', false);
+                var val = $(this).attr('val');
+                $(single_tag).remove();
+                list.remove(val);
+                $this.props.fire_response();
+                container.find('.tag_checkbox[value="' + val + '"]').prop('checked', false);
             });
             container.find('.tag_name').append(single_tag);
             $this.props.fire_response();
-          } else {
+        } else {
             container.find('.single_tag[val="' + checkbox_val + '"]').remove();
             list.remove(check2);
             $this.props.fire_response();
-          }
+        }
     },
-     //create city or topic list items
-      CREATE_TAG: function(type, data) {
+    //create city or topic list items
+    CREATE_TAG: function(type, data) {
         $this = this;
         var list = type == 'city' ? REQUEST.CITY_LIST : REQUEST.TOPIC_LIST;
         var container = $('.' + type + '_container');
         var checkbox = $('<input>').attr({
-          type: 'checkbox',
-          name: 'brand',
-          class: 'tag_checkbox',
-          container: type,
-          value: data
+            type: 'checkbox',
+            name: 'brand',
+            class: 'tag_checkbox',
+            container: type,
+            value: data
         });
         if ($.inArray(data, list) != -1)
-          checkbox.prop('checked', true);
+            checkbox.prop('checked', true);
         var checkbox_text = $('<span>').text(data);
         var single_tag = $('<label>').append(checkbox).append(checkbox_text);
         checkbox.change(function() {
-          $this.CHECK_CHANGE(this, list, container);   
+            $this.CHECK_CHANGE(this, list, container);
         });
         return single_tag;
     },
-    set_filter_list:function(method, list){
+    set_filter_list: function(method, list) {
         var $this = this;
         $('.' + method + '_search').typeahead({
             hint: true,
@@ -19313,14 +19316,14 @@ var Tag = React.createClass({displayName: "Tag",
                 }
             }
         });
-        setTimeout(function(){
-            $('.'+method+'_search').typeahead('val', '').focus();
-        },1000);
+        setTimeout(function() {
+            $('.' + method + '_search').typeahead('val', '').focus();
+        }, 1000);
     },
-    componentWillMount:function(){
+    componentWillMount: function() {
         var $this = this;
         var method = this.props.type;
-        var request_data = JSON.stringify(REQUEST.FILTER_PAYLOAD(method)); 
+        var request_data = JSON.stringify(REQUEST.FILTER_PAYLOAD(method));
         jQuery.ajax({
             type: "POST",
             beforeSend: function(request) {
@@ -19341,8 +19344,8 @@ var Tag = React.createClass({displayName: "Tag",
         });
     },
     render: function() {
-        var method = this.props.type+'_search col-xs-12';
-        var inside_container = this.props.type+"_container block col-xs-12";
+        var method = this.props.type + '_search col-xs-12';
+        var inside_container = this.props.type + "_container block col-xs-12";
         return (
                 React.createElement("div", {key: this.props.key, className: inside_container}, 
                     React.createElement("label", {className: "block_label"}, "Search by ", this.props.type), 
@@ -19354,7 +19357,7 @@ var Tag = React.createClass({displayName: "Tag",
                     )
                 )       
         );
-    }   
+    }
 });
 
 
@@ -19364,21 +19367,25 @@ module.exports = Tag;
 var React = require('react');
 
 var UserImg = React.createClass({displayName: "UserImg",
-    componentDidMount: function () {
+    componentDidMount: function() {
         var self = this;
         this.img = new Image();
         var defaultSrc = 'http://www.avidog.com/wp-content/uploads/2015/01/BellaHead082712_11-50x65.jpg';
-        this.img.onerror = function () {
-            if(self.isMounted()) {
-                self.setState({ src: defaultSrc });
+        this.img.onerror = function() {
+            if (self.isMounted()) {
+                self.setState({
+                    src: defaultSrc
+                });
             }
         };
         this.img.src = this.state.src;
     },
-    getInitialState: function () {    
-      return { src: this.props.src };
+    getInitialState: function() {
+        return {
+            src: this.props.src
+        };
     },
-    render: function () {
+    render: function() {
         return React.createElement("img", {src: this.state.src});
     }
 });

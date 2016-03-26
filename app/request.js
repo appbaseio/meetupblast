@@ -10,7 +10,7 @@ function meetup_request(meetup_variable) {
   this.CITY_LIST = [];
   this.TOPIC_LIST = [];
   this.FROM = 0;
-  this.PAGE_SIZE = 100;
+  this.PAGE_SIZE = 25;
 }
 
 meetup_request.prototype = {
@@ -21,7 +21,11 @@ meetup_request.prototype = {
     var payload = {
       "size": "0",
       "query": {
-        "match_all": {}
+        "range": {
+          "mtime": {
+            "gte": new Date().setMonth(new Date().getMonth()-1)
+          }
+        }
       },
       "aggs": {
         "city": {
@@ -144,7 +148,7 @@ meetup_request.prototype = {
     console.log("reinstantiating...");
     console.log(search_payload);
   },
-  //Stream after getting search result   
+  //Stream after getting search result
   STREAM_START: function() {
     var $this = this;
     $this.FROM = 0;

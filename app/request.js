@@ -17,7 +17,7 @@ meetup_request.prototype = {
   constructor: meetup_request,
   //Use to get list of city, topics - used in app.js only
   FILTER_PAYLOAD: function(method) {
-    var field = method == 'city' ? 'group_city_simple':'topic_name_simple';
+    var field = method == 'city' ? 'group_city_simple' : 'topic_name_simple';
     var payload = {
       "size": "0",
       "query": {
@@ -30,7 +30,7 @@ meetup_request.prototype = {
             "order": {
               "_count": "desc"
             },
-            "size": 1000
+            "size": 0
           }
         }
       }
@@ -55,7 +55,7 @@ meetup_request.prototype = {
           }]
         }
       };
-    } else if(method == 'filter'){
+    } else if (method == 'filter') {
       var obj = {
         type: 'meetup',
         stream: true,
@@ -128,19 +128,37 @@ meetup_request.prototype = {
     $this.FROM = 0;
     var streaming = this.GET_STREAMING_CLIENT();
     var search_payload = this.GET_PAYLOAD();
-    if (typeof responseStream !== 'undefined')
-      responseStream.stop();
-    responseStream = streaming.streamSearch(search_payload).on('data', function(res) {
+
+    delete search_payload.stream;
+    streaming.search(search_payload).on('data', function(res) {
       $this.meetup_variable.SET_RECORDS(res, 'initialize');
+      $this.STREAM_START();
     }).on('error', function(err) {
       console.log(err)
     });
+
 
     console.log(JSON.stringify(search_payload));
     $('#record-container').html('');
 
     console.log("reinstantiating...");
     console.log(search_payload);
+  },
+  //Stream after getting search result   
+  STREAM_START: function() {
+    var $this = this;
+    $this.FROM = 0;
+    var streaming = this.GET_STREAMING_CLIENT();
+    if (typeof responseStream !== 'undefined') {
+      responseStream.stop();
+    }
+    var search_payload = $this.GET_PAYLOAD();
+    delete search_payload.size;
+    responseStream = streaming.searchStream(search_payload).on('data', function(stream_response) {
+      $this.meetup_variable.SET_RECORDS(stream_response, 'initialize');
+    }).on('error', function(err) {
+      console.log(err)
+    });
   },
   //whenever user reaches at the bottom fire this function - used in app.js
   PAGINATION: function() {

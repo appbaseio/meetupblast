@@ -69,7 +69,6 @@ $(document).ready(function() {
 				minLength: 0
 			}, {
 				name: 'cities',
-				limit: 1000,
 				source: substringMatcher(cities),
 				templates: {
 					pending: true,

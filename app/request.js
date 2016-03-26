@@ -30,7 +30,7 @@ meetup_request.prototype = {
             "order": {
               "_count": "desc"
             },
-            "size": 1000
+            "size": 0
           }
         }
       }

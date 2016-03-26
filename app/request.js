@@ -154,7 +154,7 @@ meetup_request.prototype = {
     }
     var search_payload = $this.GET_PAYLOAD();
     delete search_payload.size;
-    responseStream = streaming.streamSearch(search_payload).on('data', function(stream_response) {
+    responseStream = streaming.searchStream(search_payload).on('data', function(stream_response) {
       $this.meetup_variable.SET_RECORDS(stream_response, 'initialize');
     }).on('error', function(err) {
       console.log(err)

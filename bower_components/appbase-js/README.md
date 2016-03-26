@@ -2,6 +2,8 @@
 
 Appbase.io is a data streams library for Node.JS and Javascript (browser build is in the [browser/](https://github.com/appbaseio/appbase-js/tree/master/browser) directory); compatible with [elasticsearch.js](https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/index.html).
 
+An up-to-date documentation for Node.JS API is available at http://docs.appbase.io/scalr/javascript/nodejs-intro.html.
+
 ## Quick Example
 
 Working code snippets where each step builds on the previous ones.
@@ -36,19 +38,23 @@ appbase.index({
 });
 ```
 
-#### Step 2: Stream the Document Updates
+#### Step 2: Read the data stream from a particular DB location
+
+Returns continous updates on a JSON document from a particular ``type``.
 
 ```js
-appbase.streamDocument({
+appbase.getStream({
       type: 'product',
       id: '1'
 }).on('data', function(res) {
-      // 'data' handler is triggered every time there is a document update.
+      // 'data' handler is triggered every time there is a **new** document update.
       console.log(res);
 }).on('error', function(err) {
       console.log("caught a stream error", err);
 })
 ```
+
+``Note:`` Existing document value is returned via ``get()`` method.
 
 ##### Console Output
 
@@ -65,14 +71,14 @@ appbase.streamDocument({
      stores: [ 'Walmart', 'Target' ] } }
 ```
 
-streamDocument() returns a ``stream.Readable`` object, which can be conveniently listened via the 'on("data")' event listener. Check out the [stream_document_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_document_test.js) where we make an update to the document and see any further updates to it via the 'data' event. 
+getStream() returns a ``stream.Readable`` object, which can be conveniently listened via the 'on("data")' event listener. Check out the [stream_document_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_document_test.js) where we make an update to the document and see any further updates to it via the 'data' event. 
 
-#### Step 3: Streaming Queries
+#### Step 3: Apply queries on data streams
 
-While streaming documents is straightforward, streaming queries touch the entire breadth of [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) - boolean, regex, geo, fuzzy to name a few. Let's stream the results of a simple **``match_all``** query on the ``product`` type:
+Get continuous results by searching across the database streams. A query can be written using the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html) - which supports composing boolean, regex, geo, fuzzy, range queries. Let's stream the results of a simple **``match_all``** query on the ``product`` type:
 
 ```js
-appbae.streamSearch({
+appbase.searchStream({
 	type: 'product',
 	body: {
 		query: {
@@ -98,10 +104,12 @@ appbae.streamSearch({
      hits: [ [Object], [Object], [Object], [Object] ] } }
 ```
 
-streamSearch() also returns a ``stream.Readable`` object, which can be conveniently listened via the 'on("data")' event listener. Check out the [stream_search_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_search_test.js) where we make an update that matches the query and see the results in the event stream. 
+searchStream() also returns a ``stream.Readable`` object, which can be conveniently listened via the 'on("data")' event listener. Check out the [stream_search_test.js](https://github.com/appbaseio/appbase-js/blob/master/test/stream_search_test.js) where we make an update that matches the query and see the results in the event stream. 
 
 
 ## API Reference
+
+For a complete API reference, check out [JS API Ref doc](http://docs.appbase.io/scalr/javascript/api-reference.html).
 
 ### Global
 
@@ -119,17 +127,17 @@ Optionally (and like in the quick example above), ``url`` can contain username a
 
 ### Reference
 
-**[reference.streamDocument(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L99)** 
+**[reference.getStream(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L99)** 
 
-Get all the document updates as a continuous event stream. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
+Get continuous updates on a JSON document with a ``type`` and ``id``. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
 
 > **args** - A set of key/value pairs that makes the document URL  
 &nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string  
 &nbsp;&nbsp;&nbsp;&nbsp;id: Valid Document ID
 
-**[reference.streamSearch(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L103)** 
+**[reference.searchStream(args)](https://github.com/appbaseio/appbase-js/blob/master/appbase.js#L103)** 
 
-Get all the query results as a continuous event stream. Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
+Get continuous updates on search queries (fuzzy, boolean, geolocation, range, full-text). Returns a [``stream.Readable``](https://nodejs.org/api/stream.html#stream_class_stream_readable) object.
 
 > **args** - A set of key/value pairs that makes the document URL  
 &nbsp;&nbsp;&nbsp;&nbsp;type: ElasticSearch Type, a string  

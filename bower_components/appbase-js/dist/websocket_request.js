@@ -4,7 +4,6 @@ var Readable = require('stream').Readable;
 var Guid = require('guid');
 var querystring = require('querystring');
 var through2 = require('through2');
-var immutable = require('immutable');
 var EventEmitter = require('events').EventEmitter;
 
 var wsRequest = function wsRequest(client, args) {
@@ -29,13 +28,13 @@ wsRequest.prototype.init = function init() {
 
 	this.id = Guid.raw();
 
-	this.request = immutable.fromJS({
+	this.request = {
 		id: this.id,
 		path: this.client.appname + '/' + this.path + '?' + querystring.stringify(this.params),
 		method: this.method,
 		body: this.body,
 		authorization: 'Basic ' + new Buffer(this.client.credentials).toString('base64')
-	});
+	};
 
 	this.resultStream = through2.obj();
 	this.resultStream.writable = false;
@@ -76,7 +75,9 @@ wsRequest.prototype.processError = function processError(err) {
 	this.resultStream.emit('error', err);
 };
 
-wsRequest.prototype.processMessage = function processMessage(dataObj) {
+wsRequest.prototype.processMessage = function processMessage(origDataObj) {
+	var dataObj = JSON.parse(JSON.stringify(origDataObj));
+
 	if (!dataObj.id && dataObj.message) {
 		this.resultStream.emit('error', dataObj);
 		return;
@@ -133,7 +134,8 @@ wsRequest.prototype.stop = function stop() {
 	if (this.resultStream.readable) {
 		this.resultStream.push(null);
 	}
-	var unsubRequest = this.request.set('unsubscribe', true);
+	var unsubRequest = JSON.parse(JSON.stringify(this.request));
+	unsubRequest.unsubscribe = true;
 	if (this.unsubscribed !== true) {
 		this.client.ws.send(unsubRequest);
 	}

@@ -1,0 +1,31 @@
+{
+  "name": "meetupblast",
+  "version": "0.0.1",
+  "description": "A twitter like live search feed built with appbase.io and react.js",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appbaseio/meetupblast.git"
+  },
+  "keywords": [
+    "appbase.io",
+    "react.js",
+    "live",
+    "feed",
+    "twitter",
+    "realtimeapp"
+  ],
+  "author": "Siddharth Kothari",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/appbaseio/meetupblast/issues"
+  },
+  "homepage": "https://github.com/appbaseio/meetupblast#readme",
+  "dependencies": {
+    "browserify": "^13.0.1",
+    "reactify": "^1.1.1"
+  }
+}

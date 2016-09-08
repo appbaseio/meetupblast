@@ -72,8 +72,8 @@ var Tag = React.createClass({
             }
         });
         setTimeout(function() {
-            $('.' + method + '_search').typeahead('val', '').focus();
-        }, 1000);
+            $('.tags_search').typeahead('val', '').focus();
+        }, 2000);
     },
     componentWillMount: function() {
         var $this = this;
@@ -99,7 +99,7 @@ var Tag = React.createClass({
         });
     },
     render: function() {
-        var method = this.props.type + '_search col-xs-12';
+        var method = this.props.type + '_search col-xs-12 tags_search';
         var inside_container = this.props.type + "_container block col-xs-12";
         return (
                 <div key={this.props.key} className={inside_container}>

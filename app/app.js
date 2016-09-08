@@ -32,6 +32,7 @@ $(document).ready(function() {
 
 		//Get Filter List
 		get_filter_list: function(method) {
+			var self = this;
 			var request_data = JSON.stringify(meetup_val.REQUEST.FILTER_PAYLOAD(method));
 			jQuery.ajax({
 				type: "POST",
@@ -54,8 +55,7 @@ $(document).ready(function() {
 						app_process.get_filter_list('topic');
 					}
 					 else {
-						$('.topic_search').typeahead('val', '').focus();
-						$('.city_search').typeahead('val', '').focus();
+					 	self.set_typefocus();
 					}
 				}
 			});
@@ -81,7 +81,22 @@ $(document).ready(function() {
 					}
 				}
 			});
-		}
+		},
+		counter: 0,
+		//Set typefocust
+		set_typefocus: function() {
+			var self = this;
+			setTimeout(function() {
+				self.counter = self.counter+1;
+				if(self.counter < 4) {
+					focustype();
+				}
+			}, 1000);
+			function focustype() {
+				$('.tags_search').typeahead('val', '').focus();
+				self.set_typefocus();
+			}
+		} 
 	}
 
 	app_process.stream_meetup();

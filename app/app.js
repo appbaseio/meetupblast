@@ -32,6 +32,8 @@ $(document).ready(function() {
 
 		//Get Filter List
 		get_filter_list: function(method) {
+			app_process.set_filter_list(method, []);
+			$('.tags_search').typeahead('val', '').focus();
 			var self = this;
 			var request_data = JSON.stringify(meetup_val.REQUEST.FILTER_PAYLOAD(method));
 			jQuery.ajax({
@@ -49,7 +51,7 @@ $(document).ready(function() {
 					$.each(cities, function(i, city) {
 						city_list.push(city.key);
 					});
-					app_process.set_filter_list(method, city_list);
+					app_process.set_filter_list(method, city_list, true);
 
 					if (method == 'city') {
 						app_process.get_filter_list('topic');
@@ -62,7 +64,10 @@ $(document).ready(function() {
 		},
 
 		//Set Filter
-		set_filter_list: function(method, cities) {
+		set_filter_list: function(method, cities, reload) {
+			if(reload) {
+				$('.' + method + '_search').typeahead('destroy');
+			} 
 			$('.' + method + '_search').typeahead({
 				hint: true,
 				highlight: true,

@@ -17,7 +17,7 @@ meetup_request.prototype = {
   constructor: meetup_request,
   //Use to get list of city, topics - used in app.js only
   FILTER_PAYLOAD: function(method) {
-    var field = method == 'city' ? 'group_city_simple' : 'topic_name_simple';
+    var field = method == 'city' ? 'group.group_city.group_city_simple' : 'topic_name_simple';
     var payload = {
       "size": "0",
       "query": {
@@ -105,7 +105,7 @@ meetup_request.prototype = {
       if ($this.CITY_LIST.length) {
         search_payload['body']['query']['filtered']['filter']['and'][0] = {
           'terms': {
-            "group_city_simple": $this.CITY_LIST
+            "group.group_city.group_city_simple": $this.CITY_LIST
           }
         };
       }

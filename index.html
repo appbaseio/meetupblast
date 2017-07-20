@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--  <script src="https://fb.me/react-0.13.3.min.js"></script>
+        <script src="https://fb.me/JSXTransformer-0.13.3.js"></script> -->
+        <title>Meetup</title>
+        <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+		<script src="bower_components/appbase-js/browser/appbase.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	    <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="assets/js/typeahead-bundle.js"></script>
+         <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body class="container">
+<a href="https://github.com/appbaseio/meetupblast"><img style="position: absolute; top: 0; right: 0; border: 0;z-index:15" src="https://camo.githubusercontent.com/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png"></a>
+<a class="btn btn-info" href="http://news.appbase.io/meetupblast" target="_blank" style="position: absolute; bottom:10px; left:10px;z-index: 15;color:white;font-size:1em;"> &nbsp;Read about how we built it here</a>
+        <div class="row meetup-container">
+            <div class="meetup-filter-container">
+                <div class="block col-xs-12 city_container">
+                    <label class="block_label">Search by city</label>
+                    <div class="tag_name">
+                    </div>
+                    <div class="full_row">
+                        <input type="text" placeholder="search" class="city_search  col-xs-12 tags_search" />
+                        <img src="assets/images/search.png" class="search_thumb">
+                    </div>
+                </div>
+                <div class="block col-xs-12  topic_container">
+                    <label class="block_label">Search by topic</label>
+                    <div class="tag_name">
+                    </div>
+                    <div class="full_row">
+                        <input type="text" placeholder="search" class="topic_search col-xs-12 tags_search" />
+                        <img src="assets/images/search.png" class="search_thumb">
+                    </div>
+                </div>
+            </div>
+            <div class="meetup-record-holder">
+                <div id="record-container" class="container full_row">
+                </div>
+            </div>
+        </div>
+
+        <!-- For template Start -->
+        <div class="hide">
+            <a class="full_row single-record single_record_for_clone">
+                <div class="img-container">
+                    <img class="record_img" src='' alt='img' />
+                </div>
+                <div class="text-container full_row">
+                    <div class="text-head text-overflow full_row">
+                    </div>
+                    <div class="text-description text-overflow full_row">
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- For template End -->
+       <script type="text/javascript" src="app/helper.js"></script>
+       <script type="text/javascript" src="app/variable.js"></script>
+       <script type="text/javascript" src="app/request.js"></script>
+       <script type="text/javascript" src="app/app.js"></script>
+    </body>
+</html>

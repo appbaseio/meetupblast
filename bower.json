@@ -1,0 +1,6 @@
+{
+  "name": "meetuprsvp-ui",
+  "dependencies": {
+    "appbase-js": "latest"
+  }
+}
